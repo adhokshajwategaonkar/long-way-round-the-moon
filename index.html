@@ -1020,7 +1020,7 @@ let ready = false;
    it plays. A visitor can still add their own later from "Add sound", or by dropping a file anywhere. */
 const LOCAL = ['album.ogg', 'album.mp3', 'album.m4a'];
 async function findLocal() {
-  if (location.protocol === 'file:') return null;
+  if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) return null;      // only ever looked for on your own machine
   for (const u of LOCAL) { try { const r = await fetch(u, { method: 'HEAD', cache: 'no-store' }); if (r.ok && /audio|ogg|octet/.test(r.headers.get('content-type') || 'audio')) return u; } catch (e) {} }
   return null;
 }
