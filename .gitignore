@@ -1,0 +1,8 @@
+# a local copy of the album, for playing on this machine only. Never commit it.
+album.*
+*.ogg
+*.mp3
+*.m4a
+*.flac
+*.wav
+.DS_Store

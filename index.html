@@ -39,6 +39,8 @@ html,body{height:100%;margin:0}
 body{background:var(--ground);color:var(--ink);font-family:var(--f-sans);overflow:hidden;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
 canvas#gl{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab;outline:none}
 canvas#gl.drag{cursor:grabbing}
+canvas#gl{opacity:0;transition:opacity 1.8s ease}
+canvas#gl.on{opacity:1}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 :focus-visible{outline:2px solid var(--hot);outline-offset:4px}
 .lab{font:500 10.5px/1.4 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;margin:0}
@@ -46,33 +48,42 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='.5'/></svg>")}
 #vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse 80% 78% at 50% 46%,transparent 55%,rgba(0,0,0,.4) 100%)}
 
-/* ---------- gate: one moon ---------- */
-#gate{position:fixed;inset:0;z-index:6;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:clamp(24px,6vw,96px);
-  padding:clamp(22px,6vw,88px);background:rgba(8,8,10,.66);transition:opacity 1.1s ease,visibility 1.1s;overflow:auto}
-#gate.gone{opacity:0;visibility:hidden;pointer-events:none}
-.words{display:flex;flex-direction:column;gap:20px;max-width:34rem}
-.words .lab{color:var(--mut)}
-#gate h1{font:400 clamp(46px,7.4vw,108px)/.93 var(--f-serif);letter-spacing:-.012em;margin:0;text-wrap:balance}
-#gate h1 i{color:var(--hot)}
-.lede{font-size:clamp(15px,1.25vw,18px);line-height:1.55;margin:0;color:#cfcdc6;max-width:50ch}
-#status{font:400 12.5px/1.5 var(--f-mono);color:var(--mut);margin:0;min-height:1.5em}
-#status.ok{color:var(--ink)}
+/* ---------- gate: no panel. The walk's first place is the page: the eclipse over the water, the title on the water
+   below it, lettered like the titles in the land, and the ten places already laid out along the bottom. ---------- */
+#gate{position:fixed;inset:0;z-index:6;transition:opacity 1.3s ease,visibility 1.3s;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(2,3,8,0) 45%,rgba(2,3,8,.42) 100%)}
+#gate.gone{opacity:0;visibility:hidden}
+#gate #g-scale{opacity:0;transition:opacity 1.2s ease}
+#gate.in #g-scale{opacity:1}
+#gate button{pointer-events:auto}
+#g-top{position:absolute;left:18px;top:14px;color:var(--mut)}
+#g-mid{position:absolute;left:50%;top:51%;transform:translateX(-50%);width:min(64rem,calc(100vw - 40px));display:grid;justify-items:center;gap:16px;text-align:center}
+#g-mid::before{content:"";position:absolute;inset:-30px -10% -40px;background:radial-gradient(closest-side,rgba(2,3,8,.55),transparent);z-index:-1}
+#gate h1{font:200 clamp(30px,4.3vw,74px)/1.08 'Jost',var(--f-sans);letter-spacing:.1em;padding-left:.1em;margin:0;text-wrap:balance;color:#e8ecf6}
+#gate h1,#gate #beat,#gate .lede,#gate #begin{animation:rise 1.6s cubic-bezier(.2,.8,.2,1) both}
+#gate #beat{animation-delay:.15s}#gate .lede{animation-delay:.3s}#gate #begin{animation-delay:.45s}
+@keyframes rise{from{opacity:0;transform:translateY(14px);filter:blur(6px)}}
+#beat{width:min(520px,72vw);height:40px;overflow:visible;margin-top:-6px}
+#beat path{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+#beat .base{stroke:#e8ecf6;stroke-width:1;opacity:.35}
+#beat .trace{stroke:#ffd9b4;stroke-width:1.6;stroke-dasharray:14 100;stroke-dashoffset:114;animation:trace 1.087s linear infinite;filter:drop-shadow(0 0 4px rgba(255,190,140,.9))}
+@keyframes trace{to{stroke-dashoffset:0}}
+.lede{font-size:clamp(14px,1.1vw,16px);line-height:1.55;margin:0;color:#b9bccb;max-width:44ch}
+#begin{display:flex;align-items:center;gap:14px;padding:10px 8px;margin-top:6px;color:#e8ecf6;transition:opacity .6s}
+#begin[disabled]{opacity:.4;cursor:wait}
+#begin .ecl{width:26px;height:26px;border-radius:50%;background:#040408;transform:scale(calc(1 + var(--pu,0) * .12));
+  box-shadow:0 0 0 1px rgba(255,226,196,.75),0 0 calc(8px + var(--pu,0) * 26px) calc(1px + var(--pu,0) * 4px) rgba(255,185,130,.55)}
+#begin .lab{position:relative;padding-bottom:5px}
+#begin .lab::after{content:"";position:absolute;left:0;right:.16em;bottom:0;height:1px;background:currentColor;transform:scaleX(.35);transform-origin:left;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+#begin:hover .lab::after,#begin:focus-visible .lab::after{transform:none}
+#status{font:400 11.5px/1.5 var(--f-mono);letter-spacing:.04em;color:var(--mut);margin:0;min-height:1.5em}
 #status.bad{color:#ff9c8a}
-.quiet{align-self:flex-start;font:500 10.5px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--mut);border-bottom:1px solid currentColor;padding-bottom:4px}
-.quiet:hover{color:var(--ink)}
-#moon{width:min(44vh,36vw);aspect-ratio:1;border-radius:50%;border:1px solid var(--ink);display:grid;place-content:center;justify-items:center;gap:8px;text-align:center;padding:12%;
-  transition:background .9s ease,color .9s ease,box-shadow .9s ease,transform .3s ease}
-#moon:hover{transform:scale(1.02)}
-#moon b{font:400 clamp(21px,2.5vw,36px)/1.02 var(--f-serif)}
-#moon small{font:400 11px/1.4 var(--f-mono);letter-spacing:.06em;color:var(--mut);transition:color .9s}
-#moon.ready{background:var(--ink);color:#111113;box-shadow:0 0 90px rgba(237,236,232,.3)}
-#moon.ready small{color:#5f5e59}
-#gate.over #moon{border-style:dashed;border-color:var(--hot)}
+#g-scale{color:var(--ink)}
+#g-scale .seg{pointer-events:auto}
 #file{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
-@media (max-width:720px){
-  #gate{grid-template-columns:1fr;align-content:center;justify-items:start}
-  #moon{order:-1;width:min(52vw,34vh)}
-}
+@media (max-height:860px){ #g-mid{top:48%;gap:12px} #begin{margin-top:0} }
+@media (max-width:720px){ #g-mid{top:50%} #gate h1{letter-spacing:.07em} }
+@media (prefers-reduced-motion:reduce){ #beat .trace{animation:none;stroke-dasharray:none;opacity:.6} }
 
 /* ---------- hud ---------- */
 #hud{position:fixed;inset:0;pointer-events:none;color:var(--hud);opacity:0;transition:opacity 1.4s ease .4s;z-index:3}
@@ -118,11 +129,11 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 #endnote button{pointer-events:auto;border-bottom:1px solid currentColor;padding-bottom:4px}
 
 /* the journey: ten places on one line */
-#scale{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:min(780px,calc(100vw - 36px));display:grid;gap:9px;justify-items:center}
-#tip{font:400 clamp(17px,1.7vw,21px)/1.1 var(--f-serif);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-#tip small{font:500 10.5px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;opacity:.7;margin-left:.9em}
-#rail{position:relative;width:100%;height:30px;pointer-events:auto}
-#rail::before{content:"";position:absolute;left:0;right:0;top:14px;height:1px;background:currentColor;opacity:.4}
+.scale{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:min(780px,calc(100vw - 36px));display:grid;gap:9px;justify-items:center}
+.tip{font:400 clamp(17px,1.7vw,21px)/1.1 var(--f-serif);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.tip small{font:500 10.5px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;opacity:.7;margin-left:.9em}
+.rail{position:relative;width:100%;height:30px;pointer-events:auto}
+.rail::before{content:"";position:absolute;left:0;right:0;top:14px;height:1px;background:currentColor;opacity:.4}
 .seg{position:absolute;top:0;height:30px;display:block}
 .seg svg{position:absolute;left:-7px;top:7.5px;width:14px;height:14px;overflow:visible;opacity:.7;transition:transform .25s,opacity .25s}
 .seg:hover svg,.seg.here svg{opacity:1;transform:scale(1.4)}
@@ -141,7 +152,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   #hint{white-space:normal;text-align:center;width:70vw;bottom:150px}
   #note{left:22px;right:22px;width:auto;top:60%}
   #volume{width:84px}
-  #tip small{display:none}
+  .tip small{display:none}
 }
 @media (prefers-reduced-motion:reduce){ #gate,#hud,#endnote,#veil,#note{transition-duration:.01s} #song.swap #song-t{animation:none} }
 </style>
@@ -152,16 +163,20 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 <div id="grain"></div>
 
 <section id="gate" aria-labelledby="ttl">
-  <div class="words">
-    <p class="lab">Ten places, one for each song</p>
-    <h1 id="ttl">The long way round the <i>moon</i></h1>
-    <p class="lede">A walk through Pink Floyd&rsquo;s <i>The Dark Side of the Moon</i>. Each song is a landscape. The music meets you where you are, and a line about each song sits quietly in the corner if you want it. Nothing stops you; keep walking. Bring your own copy of the album as one audio file.</p>
+  <p class="lab" id="g-top">Ten places &middot; one for each song</p>
+  <div id="g-mid">
+    <h1 id="ttl">the long way round the moon</h1>
+    <svg id="beat" viewBox="0 0 520 40" preserveAspectRatio="none" aria-hidden="true">
+      <path class="base" d="M0 26H300L312 20L322 26H334L342 34L354 2L366 36L376 26H400L416 19L432 26H520"/>
+      <path class="trace" pathLength="100" d="M0 26H300L312 20L322 26H334L342 34L354 2L366 36L376 26H400L416 19L432 26H520"/>
+    </svg>
+    <p class="lede">A walk through Pink Floyd&rsquo;s <i>The Dark Side of the Moon</i>. Each song is a landscape, and the light changes as you go.</p>
+    <button id="begin" type="button" disabled><span class="ecl"></span><span class="lab" id="begin-l">Begin the walk</span></button>
     <p id="status" role="status">Laying out the land&hellip;</p>
-    <button class="quiet" id="mute-walk" type="button">Walk without sound</button>
   </div>
-  <input type="file" id="file" accept="audio/*,.ogg,.oga,.mp3,.m4a,.flac,.wav" tabindex="-1">
-  <button id="moon" type="button"><b id="moonword">Drop the album here</b><small id="moonsub">or tap to choose the file</small></button>
+  <div class="scale" id="g-scale"><div class="tip" id="g-tip">Speak to Me<small>I &middot; The far side</small></div><nav class="rail" id="g-rail" aria-label="Start from a place"></nav></div>
 </section>
+<input type="file" id="file" accept="audio/*,.ogg,.oga,.mp3,.m4a,.flac,.wav" tabindex="-1">
 
 <div id="hud">
   <div id="song">
@@ -175,7 +190,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   <div id="note"><span class="lab" id="note-k"></span><p id="note-t"></p></div>
   <div id="hint" class="lab">Keep scrolling to walk &middot; drag to look around</div>
   <div id="endnote"><p>Only the heartbeat is left, as it was at the start.</p><button id="again" class="lab" type="button">Walk me back</button></div>
-  <div id="scale"><div id="tip"></div><nav id="rail" aria-label="Places along the walk"><span id="pin"></span></nav></div>
+  <div id="scale" class="scale"><div id="tip" class="tip"></div><nav id="rail" class="rail" aria-label="Places along the walk"><span id="pin"></span></nav></div>
 </div>
 <div id="veil" aria-hidden="true"></div>
 <div id="toast" role="status"></div>
@@ -436,6 +451,7 @@ const SC = [null,
 const up = (hd, el) => [hd[0] * Math.cos(el), Math.sin(el), hd[1] * Math.cos(el)];
 const D0 = up(dirOf(ANCH.plain.th), 6 * DEG), MOONT = norm([dirOf(ANCH.dial1.th)[0] + .1, .45, dirOf(ANCH.dial1.th)[1]]), ZEN = norm([.3, .8, -.4]);
 const LMOON = up(dirOf(ANCH.lawn.th + .5), 20 * DEG), ESUN = up(dirOf(ANCH.top.th), 30 * DEG);
+const GATE_DIR = norm([D0[0], D0[1] - .17, D0[2]]);      // before the walk: face the eclipse, with the water below it for the title
 const edge = (c, s, a = 24, b = 24) => smooth(CH[c].s0, CH[c].s0 + a, s) * (1 - smooth(CH[c].s1 - b, CH[c].s1, s));
 function skyAt(s, p) {
   if (s < CH[2].s0) return { dir: D0, a: 1 - smooth(CH[1].s1 - 30, CH[1].s1 - 2, s), u: null, el: 0 };
@@ -934,7 +950,7 @@ function model(o, x, y, z, w, h, yaw, pitch, roll) {
 
 /* ---------- state ---------- */
 let entered = false, s = 0, target = 0, vel = 0, yaw = 0, pitch = 0, dragging = false, room = -1, reg = -1, regAt = 0, pulse = 0, level = .3, walked = 0, lastT = 0, recenter = 0, landReady = false, hoverTip = '';
-let rew = null, songIx = -2, songLive = null, songTick = 0, hotDark = null, pace = 10, textA = 0, noteNow = null, noteAt = -9, noteT = 0, notesOn = true, curKey = '', veilT = 0, wordsStale = false;
+let rew = null, songIx = -2, songLive = null, songTick = 0, hotDark = null, pace = 10, textA = 0, noteNow = null, noteAt = -9, noteT = 0, notesOn = true, curKey = '', veilT = 0, wordsStale = false, gateK = 1, aimed = false;
 const keys = {}, fwd = [0, 0, -1];
 const MEM = CH.map(() => ({ last: null, seen: -1 }));             // what each place remembers: where its song was when you left, and how far in you have been
 
@@ -996,44 +1012,61 @@ function idb() { return new Promise((res, rej) => { try { const r = indexedDB.op
 async function idbSet(k, v) { try { const d = await idb(); await new Promise((res, rej) => { const tx = d.transaction('kv', 'readwrite'); tx.objectStore('kv').put(v, k); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); } catch (e) {} }
 async function idbGet(k) { try { const d = await idb(); return await new Promise((res, rej) => { const q = d.transaction('kv').objectStore('kv').get(k); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); } catch (e) { return null; } }
 
-const statusEl = $('#status'), moon = $('#moon'), gate = $('#gate'), hud = $('#hud'), fileIn = $('#file');
-const KEEP = 'The file stays in this browser. Nothing is uploaded.';
+const statusEl = $('#status'), beginEl = $('#begin'), gate = $('#gate'), hud = $('#hud'), fileIn = $('#file');
 function status(msg, cls = '') { statusEl.textContent = msg; statusEl.className = cls; }
-function moonSay(a, b, ok) { $('#moonword').textContent = a; $('#moonsub').textContent = b; moon.classList.toggle('ready', !!ok); }
 const mmss = v => Math.floor(v / 60) + ':' + String(Math.floor(v % 60)).padStart(2, '0');
 let ready = false;
-function setFile(file, remembered) {
-  if (!file) return;
-  if (A.ctx) { status('Reload the page to switch to a different file.', 'bad'); return; }
-  if (A.url) URL.revokeObjectURL(A.url);
-  A.url = URL.createObjectURL(file); A.name = file.name || 'your file'; ready = false; moonSay('Listening', A.name, false);
+/* sound is never asked for. If a copy of the album sits next to this page (only ever on your own machine; it is never published),
+   it plays. A visitor can still add their own later from "Add sound", or by dropping a file anywhere. */
+const LOCAL = ['album.ogg', 'album.mp3', 'album.m4a'];
+async function findLocal() {
+  if (location.protocol === 'file:') return null;
+  for (const u of LOCAL) { try { const r = await fetch(u, { method: 'HEAD', cache: 'no-store' }); if (r.ok && /audio|ogg|octet/.test(r.headers.get('content-type') || 'audio')) return u; } catch (e) {} }
+  return null;
+}
+function useUrl(url, name, quiet) {
+  A.url = url; A.name = name; ready = false;
   const pr = new Audio(); pr.preload = 'metadata';
   pr.addEventListener('loadedmetadata', () => {
-    const d = pr.duration, known = isFinite(d) && d > 0, odd = known && (d < 2400 || d > 2700); ready = true; moonSay('Begin', A.name + (known ? ' · ' + mmss(d) : ''), true);
-    status(odd ? 'This file is not about 42 minutes long, so songs may not line up with their places.' : (remembered ? 'Remembered from your last visit. ' : '') + KEEP, odd ? 'bad' : 'ok');
+    const d = pr.duration, odd = isFinite(d) && d > 0 && (d < 2400 || d > 2700); ready = true; gateUi();
+    if (odd && !quiet) toast('This file is not about 42 minutes long, so songs may not line up with their places.');
+    if (entered && A.silent) startSound();
   }, { once: true });
-  pr.addEventListener('error', () => { URL.revokeObjectURL(A.url); A.url = null; moonSay('Drop the album here', 'or tap to choose the file', false); status('This browser cannot play ' + A.name + '. Try an MP3 or M4A copy, or open this page in Chrome or Firefox.', 'bad'); }, { once: true });
-  pr.src = A.url;
-  if (!remembered) idbSet('album', { blob: file, name: file.name });
+  pr.addEventListener('error', () => { if (url.startsWith('blob:')) URL.revokeObjectURL(url); A.url = null; ready = false; gateUi(); if (!quiet) toast('This browser cannot play ' + name + '. An MP3 or M4A copy usually works.'); }, { once: true });
+  pr.src = url;
+}
+function setFile(file, remembered) {
+  if (!file) return;
+  if (A.ctx) { toast('Reload the page to switch to a different file.'); return; }
+  if (A.url && A.url.startsWith('blob:')) URL.revokeObjectURL(A.url);
+  useUrl(URL.createObjectURL(file), file.name || 'your file', remembered);
+  if (!remembered) { idbSet('album', { blob: file, name: file.name }); if (entered) toast('Playing ' + (file.name || 'your file') + '. It stays in this browser.'); }
+}
+function startSound() {
+  try { audioInit(); A.silent = false; arrive(-1, Math.max(reg, 0), true); A.ctx.resume().catch(() => {}); }
+  catch (e) { A.silent = true; toast('Sound could not start in this browser, so the walk is silent.'); }
+  soundUi();
+}
+function gateUi() {
+  beginEl.disabled = !landReady;
+  if (!landReady) return;
+  status(A.url && ready ? 'With sound. Headphones help.' : '');
 }
 
 /* ---------- gate, volume ---------- */
-moon.addEventListener('click', () => { if (ready && A.url && landReady) enter(true); else if (!ready) fileIn.click(); });
+beginEl.addEventListener('click', () => enter());
 fileIn.addEventListener('change', () => setFile(fileIn.files[0], false));
-addEventListener('dragover', e => { e.preventDefault(); if (!gate.classList.contains('gone')) gate.classList.add('over'); });
-addEventListener('dragleave', () => gate.classList.remove('over'));
-addEventListener('drop', e => { e.preventDefault(); gate.classList.remove('over'); const f = e.dataTransfer && e.dataTransfer.files[0]; if (f && !gate.classList.contains('gone')) setFile(f, false); });
-function enter(withSound) {
-  if (!landReady) return;
+addEventListener('dragover', e => e.preventDefault());
+addEventListener('drop', e => { e.preventDefault(); const f = e.dataTransfer && e.dataTransfer.files[0]; if (f && /^audio\//.test(f.type || 'audio/')) setFile(f, false); });
+function enter(at) {
+  if (!landReady || entered) return;
   gate.classList.add('gone'); hud.classList.add('on');
-  if (withSound && A.url) {
-    try { audioInit(); A.silent = false; arrive(-1, Math.max(reg, 0), true); A.ctx.resume().catch(() => {}); }
-    catch (e) { A.silent = true; toast('Sound could not start in this browser, so the walk is silent.'); }
-  }
-  entered = true; soundUi(); cv.focus({ preventScroll: true });
+  entered = true;
+  if (at != null) jump(at); else target = Math.max(target, 22);      // the first step is taken for you, so the page turns straight into the walk
+  if (A.url && ready) startSound(); else soundUi();
+  cv.focus({ preventScroll: true });
 }
-$('#mute-walk').addEventListener('click', () => enter(false));
-$('#sound').addEventListener('click', e => { e.preventDefault(); gate.classList.remove('gone'); });
+$('#sound').addEventListener('click', e => { e.preventDefault(); fileIn.click(); });
 const volEl = $('#volume'); volEl.value = Math.round(A.vol * 100);
 volEl.addEventListener('input', () => { A.vol = volEl.value / 100; if (A.master) A.master.gain.setTargetAtTime(A.vol, A.ctx.currentTime, .05); try { localStorage.setItem('lw-vol', String(A.vol)); } catch (e) {} });
 function soundUi() { $('#sound').hidden = !A.silent; $('#vol-l').hidden = A.silent; volEl.hidden = A.silent; }
@@ -1078,7 +1111,7 @@ function songUi(t) {
 $('#song-bar').addEventListener('click', e => { if (!live() || songIx < 0) return; const r = e.currentTarget.getBoundingClientRect(), q = clamp((e.clientX - r.left) / r.width, 0, 1); playAt(TRACKS[songIx] + q * (TRACKS[songIx + 1] - TRACKS[songIx]), .5); songTick = 0; });
 
 /* ---------- the journey scale ---------- */
-const rail = $('#rail'), tip = $('#tip'), pin = $('#pin'), segs = [];
+const rail = $('#rail'), tip = $('#tip'), pin = $('#pin'), segs = [], grail = $('#g-rail'), gtip = $('#g-tip');
 const label = c => `${CH[c].name}<small>${CH[c].no} · ${CH[c].place}</small>`;
 function showTip() { tip.innerHTML = hoverTip || label(Math.max(room, 0)); }
 function hover(el, html) { const on = () => { hoverTip = html; showTip(); }, off = () => { hoverTip = ''; showTip(); }; el.addEventListener('pointerenter', on); el.addEventListener('focus', on); el.addEventListener('pointerleave', off); el.addEventListener('blur', off); }
@@ -1092,6 +1125,10 @@ CH.forEach((ch, c) => {
   b.setAttribute('aria-label', `${ch.name}, ${ch.place}`); hover(b, label(c));
   b.addEventListener('click', e => { const r = b.getBoundingClientRect(), q = (e.clientX - r.left) / r.width; jump(q < .12 || !e.clientX ? ch.s0 + (c ? 2 : 0) : ch.s0 + ch.len * q); });
   rail.appendChild(b); segs.push(b);
+  const gb = b.cloneNode(true); gb.className = 'seg' + (c ? '' : ' here'); gb.setAttribute('aria-label', `Start at ${ch.name}, ${ch.place}`);      // the same ten places on the opening screen; any of them is a way in
+  const gOn = () => { gtip.innerHTML = label(c); }, gOff = () => { gtip.innerHTML = label(0); };
+  gb.addEventListener('pointerenter', gOn); gb.addEventListener('focus', gOn); gb.addEventListener('pointerleave', gOff); gb.addEventListener('blur', gOff);
+  gb.addEventListener('click', () => enter(c ? ch.s0 + 2 : null)); grail.appendChild(gb);
 });
 REG.forEach((r, i) => { if (!r.i || r.soft) return; const b = document.createElement('button'); b.type = 'button'; b.className = 'tick'; b.style.left = (r.s / TOTAL * 100) + '%'; b.setAttribute('aria-label', `${CH[r.c].name}: ${r.name}`); hover(b, `${r.name}<small>${CH[r.c].name}</small>`); b.addEventListener('click', e => { e.stopPropagation(); jump(r.s + .5, i); }); rail.appendChild(b); });
 
@@ -1152,7 +1189,7 @@ function frame(ms) {
   /* the titles are things standing in the land: they come out of the distance, and are gone once behind you */
   let lead = null, lv = 0;
   for (const g of SIGNS) {
-    const ds = g.s - s; g.ds = ds; g.a = rew || ds < -8 || ds > g.far ? 0 : smooth(g.far, g.far * .74, ds) * smooth(-8, 6, ds);
+    const ds = g.s - s; g.ds = ds; g.a = rew || ds < -8 || ds > g.far ? 0 : smooth(g.far, g.far * .74, ds) * smooth(-8, 6, ds) * (1 - gateK);
     const v = g.a * smooth(6, 24, ds) * smooth(100, 70, ds) * .42; if (v > lv) { lv = v; lead = g; }
   }
   textA = lerp(textA, lv, 1 - Math.exp(-dt * 3));
@@ -1160,6 +1197,7 @@ function frame(ms) {
   let nn = null; if (entered && !rew && notesOn) for (const n of NOTES) { if (n.s - 34 > s) break; if (s < n.s + 36) nn = n; }
   if (nn !== noteNow && t - noteAt > .7) { noteNow = nn; noteAt = t; noteEl.classList.remove('on'); clearTimeout(noteT); if (nn) noteT = setTimeout(() => { $('#note-k').textContent = `${CH[nn.c].name} \u00b7 ${nn.n + 1} of ${nn.of}`; $('#note-t').textContent = nn.text; noteEl.classList.add('on'); }, 620); }
 
+  gateK = entered ? (gateK < .002 ? 0 : gateK * Math.exp(-dt * 1.5)) : 1;
   const pu = pulse * (REDUCED ? .3 : 1), Pl = palAt(s), dark = Pl.hud[0] + Pl.hud[1] + Pl.hud[2] < 1.2;
   const ck = ri + (dark ? 'd' : 'l') + (dragging ? 'g' : ''); if (ck !== curKey) { curKey = ck; cv.style.cursor = dragging ? 'grabbing' : cursorCss(ri, !dark); }
   hud.style.setProperty('--hud', `rgb(${Pl.hud.map(v => Math.round(v * 255)).join(',')})`);
@@ -1175,7 +1213,9 @@ function frame(ms) {
   let bx = tg[0], by = tg[1] * .7, bz = tg[2];
   if (!rew) for (const f of FOCI) if (s > f.s0 && s < f.s1) { const w = smooth(f.s0, f.s0 + 22, s) * (1 - smooth(f.s1 - 22, f.s1, s)) * f.k * (1 - 1.2 * textA), q = f.at(), d = Math.abs(q[0]) + Math.abs(q[1]) + Math.abs(q[2]) < 1.8 ? q : norm([q[0] - cam[0], q[1] - cam[1], q[2] - cam[2]]); bx = lerp(bx, d[0], w); by = lerp(by, d[1], w); bz = lerp(bz, d[2], w); }
   if (lead && lead.mid) { const q = lead.mid, d = norm([q[0] - cam[0], q[1] - cam[1], q[2] - cam[2]]), w = textA * (cv.width < cv.height ? 1.5 : 1); bx = lerp(bx, d[0], w); by = lerp(by, d[1] * .5, w); bz = lerp(bz, d[2], w); }   // a glance toward what there is to read, no more
-  const k2 = 1 - Math.exp(-dt * 2.2), bn = norm([bx, by, bz]); for (let i = 0; i < 3; i++) fwd[i] = lerp(fwd[i], bn[i], Math.abs(s - ps) > 40 ? 1 : k2);
+  if (gateK > 0) { const w = smooth(0, 1, gateK); bx = lerp(bx, GATE_DIR[0], w); by = lerp(by, GATE_DIR[1], w); bz = lerp(bz, GATE_DIR[2], w); }     // the opening screen looks at the eclipse; walking turns you to the path
+  if (!entered) gate.style.setProperty('--pu', pu.toFixed(3));
+  const k2 = 1 - Math.exp(-dt * 2.2), bn = norm([bx, by, bz]); for (let i = 0; i < 3; i++) fwd[i] = lerp(fwd[i], bn[i], Math.abs(s - ps) > 40 || !aimed ? 1 : k2); aimed = true;
   const fn = norm(fwd), yw = Math.atan2(fn[0], -fn[2]) + yaw, pt = clamp(Math.asin(clamp(fn[1], -1, 1)) + pitch, -1.5, 1.5);
   const cp = Math.cos(pt), sp = Math.sin(pt), cyw = Math.cos(yw), syw = Math.sin(yw);
   const Fv = [syw * cp, sp, -cyw * cp], Rv = [cyw, 0, syw], U = [-syw * sp, cp, cyw * sp];
@@ -1276,8 +1316,11 @@ async function boot() {
   try { await Promise.race([Promise.all(["400 60px 'Instrument Serif'", "italic 400 60px 'Instrument Serif'", "400 20px 'Geist'", "500 12px 'Geist Mono'"].map(f => document.fonts.load(f))), new Promise(r => setTimeout(r, 3000))]); } catch (e) {}
   await new Promise(r => setTimeout(r, 30));
   layShelves(); buildLand(); buildTextures(); buildProps(); showTip(); soundUi(); songUi(0);
-  landReady = true; if (!statusEl.className) status(KEEP);
+  landReady = true; gateUi();
   requestAnimationFrame(frame);
+  requestAnimationFrame(() => { gate.classList.add('in'); cv.classList.add('on'); beginEl.focus({ preventScroll: true }); });
+  const local = await findLocal();
+  if (local) { useUrl(local, 'the album', true); return; }
   const saved = await idbGet('album');
   if (saved && saved.blob && !A.url) { try { setFile(new File([saved.blob], saved.name || 'your album', { type: saved.blob.type }), true); } catch (e) {} }
 }
