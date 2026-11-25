@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <!-- one face per place; each on its own line so that one bad request cannot take the others down -->
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap" rel="stylesheet">
@@ -31,6 +31,7 @@
   --scrim:rgba(6,7,10,.62);
   --f-sans:'Geist',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
   --f-mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --f-ui:'Jost','Geist',ui-sans-serif,system-ui,sans-serif;
   --f-serif:'Instrument Serif','Iowan Old Style','Palatino Linotype',Georgia,serif;
   color-scheme:dark;
 }
@@ -43,7 +44,7 @@ canvas#gl{opacity:0;transition:opacity 1.8s ease}
 canvas#gl.on{opacity:1}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 :focus-visible{outline:2px solid var(--hot);outline-offset:4px}
-.lab{font:500 10.5px/1.4 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;margin:0}
+.lab{font:400 13px/1.4 var(--f-ui);letter-spacing:.03em;margin:0}
 #grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='.5'/></svg>")}
 #vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse 80% 78% at 50% 46%,transparent 55%,rgba(0,0,0,.4) 100%)}
@@ -56,27 +57,25 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 #gate #g-scale{opacity:0;transition:opacity 1.2s ease}
 #gate.in #g-scale{opacity:1}
 #gate button{pointer-events:auto}
-#g-top{position:absolute;left:18px;top:14px;color:var(--mut)}
 #g-mid{position:absolute;left:50%;top:51%;transform:translateX(-50%);width:min(64rem,calc(100vw - 40px));display:grid;justify-items:center;gap:16px;text-align:center}
 #g-mid::before{content:"";position:absolute;inset:-30px -10% -40px;background:radial-gradient(closest-side,rgba(2,3,8,.55),transparent);z-index:-1}
 #gate h1{font:200 clamp(30px,4.3vw,74px)/1.08 'Jost',var(--f-sans);letter-spacing:.1em;padding-left:.1em;margin:0;text-wrap:balance;color:#e8ecf6}
-#gate h1,#gate #beat,#gate .lede,#gate #begin{animation:rise 1.6s cubic-bezier(.2,.8,.2,1) both}
-#gate #beat{animation-delay:.15s}#gate .lede{animation-delay:.3s}#gate #begin{animation-delay:.45s}
+#gate h1,#gate #beat,#gate #begin{animation:rise 1.6s cubic-bezier(.2,.8,.2,1) both}
+#gate #beat{animation-delay:.15s}#gate #begin{animation-delay:.35s}
 @keyframes rise{from{opacity:0;transform:translateY(14px);filter:blur(6px)}}
 #beat{width:min(520px,72vw);height:40px;overflow:visible;margin-top:-6px}
 #beat path{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 #beat .base{stroke:#e8ecf6;stroke-width:1;opacity:.35}
 #beat .trace{stroke:#ffd9b4;stroke-width:1.6;stroke-dasharray:14 100;stroke-dashoffset:114;animation:trace 1.087s linear infinite;filter:drop-shadow(0 0 4px rgba(255,190,140,.9))}
 @keyframes trace{to{stroke-dashoffset:0}}
-.lede{font-size:clamp(14px,1.1vw,16px);line-height:1.55;margin:0;color:#b9bccb;max-width:44ch}
 #begin{display:flex;align-items:center;gap:14px;padding:10px 8px;margin-top:6px;color:#e8ecf6;transition:opacity .6s}
 #begin[disabled]{opacity:.4;cursor:wait}
 #begin .ecl{width:26px;height:26px;border-radius:50%;background:#040408;transform:scale(calc(1 + var(--pu,0) * .12));
   box-shadow:0 0 0 1px rgba(255,226,196,.75),0 0 calc(8px + var(--pu,0) * 26px) calc(1px + var(--pu,0) * 4px) rgba(255,185,130,.55)}
-#begin .lab{position:relative;padding-bottom:5px}
+#begin .lab{position:relative;padding-bottom:5px;font-size:15px;letter-spacing:.06em}
 #begin .lab::after{content:"";position:absolute;left:0;right:.16em;bottom:0;height:1px;background:currentColor;transform:scaleX(.35);transform-origin:left;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
 #begin:hover .lab::after,#begin:focus-visible .lab::after{transform:none}
-#status{font:400 11.5px/1.5 var(--f-mono);letter-spacing:.04em;color:var(--mut);margin:0;min-height:1.5em}
+#status{font:400 13px/1.5 var(--f-ui);letter-spacing:.03em;color:var(--mut);margin:0;min-height:1.5em}
 #status.bad{color:#ff9c8a}
 #g-scale{color:var(--ink)}
 #g-scale .seg{pointer-events:auto}
@@ -91,8 +90,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 /* the song: what is playing and how far into it you are */
 #song{position:absolute;left:18px;top:14px;width:min(250px,54vw);display:grid;gap:5px;pointer-events:auto}
 #song .lab{opacity:.7}
-#song-t{font:400 24px/1.05 var(--f-serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#song-t i{color:var(--hot)}
+#song-t{font:300 23px/1.1 var(--f-ui);letter-spacing:.06em;text-transform:lowercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #song.swap #song-t{animation:swap .9s cubic-bezier(.2,.8,.2,1)}
 @keyframes swap{from{opacity:0;transform:translateY(10px);filter:blur(4px)}}
 #song-bar{position:relative;height:16px;cursor:pointer;display:block;width:100%}
@@ -100,7 +98,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 #song-fill{position:absolute;left:0;top:7px;height:2px;width:0;background:var(--hot);transition:width .3s linear}
 #song-fill::after{content:"";position:absolute;right:-4px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--hot)}
 #song-ticks i{position:absolute;top:5px;width:1px;height:6px;background:currentColor;opacity:.6}
-#song-time{font-variant-numeric:tabular-nums;opacity:.8}
+#song-time{font-variant-numeric:tabular-nums;font-feature-settings:'tnum';opacity:.8}
 #vol{position:absolute;right:16px;top:14px;pointer-events:auto;display:flex;align-items:center;gap:10px;opacity:.8}
 #vol:hover{opacity:1}
 #volume{-webkit-appearance:none;appearance:none;width:110px;height:18px;background:transparent;cursor:pointer;margin:0}
@@ -116,7 +114,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 #note{position:absolute;left:clamp(22px,8.5vw,150px);top:56%;width:min(23rem,33vw);display:grid;gap:9px;color:var(--note,var(--hud));opacity:0;transform:translateY(8px);transition:opacity 1s ease,transform 1.2s cubic-bezier(.2,.8,.2,1)}
 #note::before{content:"";position:absolute;inset:-46px -70px;background:radial-gradient(closest-side,var(--scrim),transparent);opacity:.55;z-index:-1}
 #note.on{opacity:.96;transform:none}
-#note .lab{font-size:10px;opacity:.7;display:flex;align-items:center;gap:10px}
+#note .lab{font-size:12px;opacity:.7;display:flex;align-items:center;gap:10px}
 #note .lab::after{content:"";flex:0 0 34px;height:1px;background:currentColor;opacity:.5}
 #note p{margin:0;font:400 clamp(17px,1.36vw,21px)/1.42 var(--f-sans);letter-spacing:-.004em;text-wrap:pretty}
 #notes-b{position:absolute;right:16px;top:44px;pointer-events:auto;opacity:.6;border-bottom:1px solid currentColor;padding-bottom:3px}
@@ -125,13 +123,14 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 #hint.done{opacity:0}
 #endnote{position:absolute;left:50%;top:58%;transform:translateX(-50%);display:grid;justify-items:center;gap:16px;text-align:center;width:min(32rem,calc(100vw - 40px));opacity:0;visibility:hidden;transition:opacity 1.6s,visibility 1.6s}
 #endnote.on{opacity:1;visibility:visible}
-#endnote p{margin:0;font:400 clamp(24px,2.8vw,36px)/1.15 var(--f-serif)}
+#endnote p{margin:0;font:300 clamp(22px,2.4vw,32px)/1.25 var(--f-ui);letter-spacing:.04em}
 #endnote button{pointer-events:auto;border-bottom:1px solid currentColor;padding-bottom:4px}
 
 /* the journey: ten places on one line */
 .scale{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:min(780px,calc(100vw - 36px));display:grid;gap:9px;justify-items:center}
-.tip{font:400 clamp(17px,1.7vw,21px)/1.1 var(--f-serif);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-.tip small{font:500 10.5px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;opacity:.7;margin-left:.9em}
+.tip{font:300 clamp(17px,1.5vw,20px)/1.1 var(--f-ui);letter-spacing:.06em;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.tip .nm{text-transform:lowercase}
+.tip small{font:400 13px/1 var(--f-ui);letter-spacing:.03em;opacity:.6;margin-left:1em}
 .rail{position:relative;width:100%;height:30px;pointer-events:auto}
 .rail::before{content:"";position:absolute;left:0;right:0;top:14px;height:1px;background:currentColor;opacity:.4}
 .seg{position:absolute;top:0;height:30px;display:block}
@@ -146,7 +145,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 /* a far jump along the scale is crossed behind one short blink */
 #veil{position:fixed;inset:0;z-index:4;pointer-events:none;background:var(--ground);opacity:0;transition:opacity .24s ease}
 #veil.on{opacity:1}
-#toast{position:fixed;left:50%;top:84px;transform:translateX(-50%);max-width:min(34rem,calc(100vw - 40px));padding:10px 14px;background:rgba(8,8,10,.92);border:1px solid #37373C;font:400 12.5px/1.5 var(--f-mono);color:var(--ink);opacity:0;transition:opacity .4s;z-index:7;pointer-events:none}
+#toast{position:fixed;left:50%;top:84px;transform:translateX(-50%);max-width:min(34rem,calc(100vw - 40px));padding:10px 14px;background:rgba(8,8,10,.92);border:1px solid #37373C;font:400 13.5px/1.5 var(--f-ui);color:var(--ink);opacity:0;transition:opacity .4s;z-index:7;pointer-events:none}
 #toast.on{opacity:1}
 @media (max-width:720px){
   #hint{white-space:normal;text-align:center;width:70vw;bottom:150px}
@@ -163,18 +162,16 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 <div id="grain"></div>
 
 <section id="gate" aria-labelledby="ttl">
-  <p class="lab" id="g-top">Ten places &middot; one for each song</p>
   <div id="g-mid">
     <h1 id="ttl">the long way round the moon</h1>
     <svg id="beat" viewBox="0 0 520 40" preserveAspectRatio="none" aria-hidden="true">
       <path class="base" d="M0 26H300L312 20L322 26H334L342 34L354 2L366 36L376 26H400L416 19L432 26H520"/>
       <path class="trace" pathLength="100" d="M0 26H300L312 20L322 26H334L342 34L354 2L366 36L376 26H400L416 19L432 26H520"/>
     </svg>
-    <p class="lede">A walk through Pink Floyd&rsquo;s <i>The Dark Side of the Moon</i>. Each song is a landscape, and the light changes as you go.</p>
     <button id="begin" type="button" disabled><span class="ecl"></span><span class="lab" id="begin-l">Begin the walk</span></button>
     <p id="status" role="status">Laying out the land&hellip;</p>
   </div>
-  <div class="scale" id="g-scale"><div class="tip" id="g-tip">Speak to Me<small>I &middot; The far side</small></div><nav class="rail" id="g-rail" aria-label="Start from a place"></nav></div>
+  <div class="scale" id="g-scale"><div class="tip" id="g-tip"><span class="nm">Speak to Me</span><small>The far side</small></div><nav class="rail" id="g-rail" aria-label="Start from a place"></nav></div>
 </section>
 <input type="file" id="file" accept="audio/*,.ogg,.oga,.mp3,.m4a,.flac,.wav" tabindex="-1">
 
@@ -188,7 +185,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   <label id="vol" class="lab"><button id="sound" class="lab" type="button" hidden>Add sound</button><span id="vol-l">Volume</span><input type="range" id="volume" min="0" max="100" value="80" aria-label="Volume"></label>
   <button id="notes-b" class="lab" type="button" aria-label="Show or hide the story notes">Notes on</button>
   <div id="note"><span class="lab" id="note-k"></span><p id="note-t"></p></div>
-  <div id="hint" class="lab">Keep scrolling to walk &middot; drag to look around</div>
+  <div id="hint" class="lab">Scroll to walk, drag to look</div>
   <div id="endnote"><p>Only the heartbeat is left, as it was at the start.</p><button id="again" class="lab" type="button">Walk me back</button></div>
   <div id="scale" class="scale"><div id="tip" class="tip"></div><nav id="rail" class="rail" aria-label="Places along the walk"><span id="pin"></span></nav></div>
 </div>
@@ -224,51 +221,51 @@ const MONO = "'Geist Mono',ui-monospace,Menlo,monospace";
 const NGAP = 40;
 const TRACKS = [0, 70, 241, 466, 874, 1153, 1538, 2005, 2213, 2440, 2545];      // where each song really starts in the file
 const CH = [
- { no: 'I', ts: 'r', name: 'Speak to Me', html: 'Speak to <i>Me</i>', place: 'The far side', a0: 0, a1: 78, ti: 96,
+ { no: 'I', ts: 'r', name: 'Speak to Me', place: 'The far side', a0: 0, a1: 78, ti: 96,
    moves: [['A', 370, 14, .3], ['A', 370, -28, .5], ['A', 370, 14, .5]],
    marks: [[0, 3, 'The heartbeat']],
    st: [ { at: 170, side: 'r', t: 32, name: 'The voices', notes: ['The album came out on 1 March 1973.', 'It stayed on the American chart for 741 weeks. That is about fourteen years.'] },
          { at: 280, side: 'r', t: 60, name: 'First light', notes: ['It has sold more than 45 million copies.', 'The first thing you hear on it is a heartbeat.'] } ] },
- { no: 'II', ts: 'l', name: 'Breathe', html: '<i>Breathe</i>', place: 'First morning', a0: 67, a1: 241,
+ { no: 'II', ts: 'l', name: 'Breathe', place: 'First morning', a0: 67, a1: 241,
    moves: [['F', 50, 3], ['A', 70, 50, 5], ['P', 'crest'], ['F', 30, 1], ['A', 60, -80, -6], ['P', 'plain'], ['F', 120, -2]],
    marks: [[0, 67.5, 'First chord']],
    st: [ { at: 150, side: 'r', t: 144.5, name: 'The voice enters', notes: ['Rick Wright played jazz before he played in this band.', 'There is a chord in this song that he took from Miles Davis.'] },
          { at: 300, side: 'l', t: 194, name: 'Second verse', notes: ['He heard it on Kind of Blue and worked it out at home.'] } ] },
- { no: 'III', ts: 'r', name: 'On the Run', html: 'On the <i>Run</i>', place: 'The runway', a0: 241, a1: 432, tv: 72,
+ { no: 'III', ts: 'r', name: 'On the Run', place: 'The runway', a0: 241, a1: 432, tv: 72,
    moves: [['F', 30, -3], ['P', 'rw0'], ['F', 290, 0], ['P', 'rw1'], ['F', 60, 1]],
    marks: [[0, 243, 'Boarding'], [354, 411.5, 'The crash']],
    st: [ { at: 120, side: 'l', t: 286, name: 'The sequence locks in', notes: ['On stage in 1972 this was a guitar jam called The Travel Sequence.', 'In the studio they fed eight notes into a synthesiser and sped them up.'] },
          { at: 316, side: 'r', t: 404, name: 'Footsteps', notes: ['The running feet are Peter James, the assistant engineer, doing laps of the studio.'] } ] },
- { no: 'IV', ts: 'l', name: 'Time', html: '<i>Time</i>', place: 'The sundial', a0: 428, a1: 873,
+ { no: 'IV', ts: 'l', name: 'Time', place: 'The sundial', a0: 428, a1: 873,
    moves: [['F', 210, 0], ['P', 'dial0'], ['A', 40, 90, 2.6], ['A', 40, 90, -2.6], ['P', 'dial1'], ['F', 92, 0]],
    marks: [[0, 444, 'Ticking'], ['arc', .26, 599, 'First verse'], ['arc', 1.44, 825, 'Home again']],
    st: [ { at: 90, side: 'r', t: 466, name: 'Alarm clocks', notes: ['Alan Parsons recorded each of these clocks by itself in an antique shop.', 'He made the tape to show off a new sound system, not for the band.', 'He mentioned it during the sessions and they used it.'] } ] },
- { no: 'V', ts: 'r', name: 'The Great Gig in the Sky', html: 'The Great Gig in the <i>Sky</i>', place: 'The summit', a0: 874, a1: 1151, tv: 62,
+ { no: 'V', ts: 'r', name: 'The Great Gig in the Sky', place: 'The summit', a0: 874, a1: 1151, tv: 62,
    moves: [['A', 60, -60, 2], ['F', 40, 6], ['A', 70, 80, 18], ['A', 70, -90, 20], ['F', 40, 8], ['P', 'summit'], ['A', 70, 60, -16], ['F', 70, -14]],
    marks: [[0, 875, 'The piano'], ['summit', 2, 990, 'The summit'], ['summit', 72, 1024, 'The hush']],
    st: [ { at: 130, side: 'l', t: 939.5, name: 'The voice', notes: ['Clare Torry was a session singer, booked for a Sunday evening.', 'They told her there were no words.'] },
          { at: 290, side: 'r', t: 986, name: 'The climb', notes: ['She was paid thirty pounds and went home thinking they would not use it.', 'In 2005 her name was added to the writing credit.'] } ] },
- { no: 'VI', ts: 'l', name: 'Money', html: '<i>Money</i>', place: 'The gold cut', a0: 1151, a1: 1538,
+ { no: 'VI', ts: 'l', name: 'Money', place: 'The gold cut', a0: 1151, a1: 1538,
    moves: [['F', 40, -5], ['A', 70, -60, -8], ['A', 70, 60, -6], ['F', 80, -4], ['A', 70, 40, -2], ['F', 50, 0]],
    marks: [[0, 1153, 'The till']],
    st: [ { at: 100, side: 'l', t: 1165.5, name: 'The riff', notes: ['Roger Waters made the opening loop in his garden shed.', 'He threw coins into a bowl his wife used for mixing clay, and tore up paper.'] },
          { at: 244, side: 'l', t: 1340, name: 'Guitar solo', notes: ['The loop is seven pieces of tape joined end to end.', 'The song counts in seven until the guitar solo, which is in four.'] } ] },
- { no: 'VII', ts: 'r', name: 'Us and Them', html: 'Us and <i>Them</i>', place: 'The causeway', a0: 1538, a1: 2005, tv: 66,
+ { no: 'VII', ts: 'r', name: 'Us and Them', place: 'The causeway', a0: 1538, a1: 2005, tv: 66,
    moves: [['F', 40, 2], ['A', 400, 12, 0], ['F', 120, 0], ['A', 400, -12, 0], ['F', 30, 0]],
    marks: [[0, 1540, 'The organ']],
    st: [ { at: 110, side: 'l', t: 1630, name: 'The voice enters', notes: ['Rick Wright wrote this in 1969 for the film Zabriskie Point.', 'Back then it was called The Violent Sequence.'] },
          { at: 262, side: 'l', t: 1687, name: 'First chorus', notes: ['The director said it was beautiful but too sad, and left it out.'] } ] },
- { no: 'VIII', ts: 'r', name: 'Any Colour You Like', html: 'Any Colour You <i>Like</i>', place: 'The dunes', a0: 2005, a1: 2213,
+ { no: 'VIII', ts: 'r', name: 'Any Colour You Like', place: 'The dunes', a0: 2005, a1: 2213,
    moves: [['F', 30, 1], ['A', 75, -40, 2], ['A', 75, 80, -2], ['A', 75, -80, 3], ['A', 75, 40, -2]],
    marks: [[0, 2005, 'Synthesiser']],
    st: [ { at: 130, side: 'l', t: 2038, name: 'The swirl', notes: ['The title comes from Chris Adamson, one of the road crew.', 'Ask him for a guitar and he would say: any colour you like, they are all blue.'] },
          { at: 290, side: 'r', t: 2087, name: 'Guitar', notes: ['Roger Waters heard it as being offered a choice when there is none.'] } ] },
- { no: 'IX', ts: 'l', name: 'Brain Damage', html: 'Brain <i>Damage</i>', place: 'The lawn', a0: 2205, a1: 2440,
+ { no: 'IX', ts: 'l', name: 'Brain Damage', place: 'The lawn', a0: 2205, a1: 2440,
    moves: [['F', 60, 0], ['A', 70, 70, 0], ['P', 'lawn'], ['F', 80, 0], ['A', 70, -50, 0], ['F', 60, 0]],
    marks: [[0, 2213, 'The lawn']],
    st: [ { at: 110, side: 'l', t: 2226, name: 'The voice enters', notes: ['This one is about Syd Barrett, who started the band and had to leave it.'] },
          { at: 228, side: 'r', t: 2284, name: 'The moon rises', notes: ['The lawn is real. It is behind King’s College in Cambridge.', 'There is a sign on it telling you to keep off the grass.'] } ] },
- { no: 'X', ts: 'l', name: 'Eclipse', html: '<i>Eclipse</i>', place: 'The hill', a0: 2425, a1: 2545, tv: 58,
+ { no: 'X', ts: 'l', name: 'Eclipse', place: 'The hill', a0: 2425, a1: 2545, tv: 58,
    moves: [['F', 50, 5], ['A', 75, 60, 14], ['A', 70, -80, 16], ['F', 70, 6], ['P', 'top']],
    marks: [[0, 2431, 'The last laugh'], [.965, 2526, 'The heartbeat']],
    st: [ { at: 96, side: 'l', t: 2441, name: 'Everything', notes: ['The band wrote questions on cards and asked whoever was around the studio.', 'Gerry O’Driscoll, the doorman, got the one about the dark side of the moon.'] },
@@ -790,7 +787,7 @@ function buildProps() {
   stand(6, T.chair, S(6, .95), 5, 4.4, 4.4, { alpha: .95 }); focus(S(6, .86), S(6, .97), .5, () => { const b = beside(S(6, .95), 5); return [b[0], gy(b) + 2, b[2]]; });
 
   /* VIII. THE DUNES: every colour from afar, and each one blue by the time you reach it */
-  for (let i = 0; i < 7; i++) { const s = S(7, .14 + i * .115); stand(7, T.pane, s, [-7, 0, 7, 0, -7, 0, 7][i], i % 2 ? 5 : 3.2, 30, { add: 1, near: 0, col: SPEC[i], tint: SPEC[i].slice(), a: (o, G) => { const k = 1 - smooth(4, 46, o.s - G.s); for (let j = 0; j < 3; j++) o.tint[j] = lerp(o.col[j], BLUE[j], k); o._a = (.55 + .35 * G.pu) * (i % 2 ? .8 : 1); o._s = 1 + .06 * G.pu; } }); }
+  for (let i = 0; i < 7; i++) { const s = S(7, .14 + i * .115); stand(7, T.pane, s, (i % 2 ? 1 : -1) * (i % 2 ? 7.5 : 6.5), i % 2 ? 5 : 3.2, 30, { add: 1, near: 0, col: SPEC[i], tint: SPEC[i].slice(), a: (o, G) => { const k = 1 - smooth(4, 46, o.s - G.s); for (let j = 0; j < 3; j++) o.tint[j] = lerp(o.col[j], BLUE[j], k); o._a = (.55 + .35 * G.pu) * (i % 2 ? .8 : 1); o._s = 1 + .06 * G.pu; } }); }
 
   /* IX. THE LAWN: signs nobody reads, someone sitting on the grass, doors with no walls, a full moon */
   for (let i = 0; i < 8; i++) stand(8, T.sign, S(8, .07 + i * .115), (i % 2 ? 1 : -1) * 6, 1.5, 3, { alpha: .9 });
@@ -1050,7 +1047,7 @@ function startSound() {
 function gateUi() {
   beginEl.disabled = !landReady;
   if (!landReady) return;
-  status(A.url && ready ? 'With sound. Headphones help.' : '');
+  status(A.url && ready ? 'Headphones on.' : '');
 }
 
 /* ---------- gate, volume ---------- */
@@ -1102,7 +1099,7 @@ function songUi(t) {
   if (on) { ix = 0; while (ix < 9 && at >= TRACKS[ix + 1]) ix++; }
   const t0 = TRACKS[ix], t1 = TRACKS[ix + 1];
   if (ix !== songIx || on !== songLive) {
-    songIx = ix; songLive = on; $('#song-t').innerHTML = CH[ix].html; $('#song-l').textContent = on ? 'Now playing' : rew ? 'Rewinding' : 'Silent walk';
+    songIx = ix; songLive = on; $('#song-t').textContent = CH[ix].name; $('#song-l').textContent = on ? 'Now playing' : rew ? 'Rewinding' : 'Silent walk';
     ticksEl.innerHTML = REG.filter(r => !r.soft && r.t > t0 + 2 && r.t < t1).map(r => `<i style="left:${((r.t - t0) / (t1 - t0) * 100).toFixed(2)}%" title="${r.name}"></i>`).join('');
     songEl.classList.remove('swap'); void songEl.offsetWidth; songEl.classList.add('swap'); songTick = 0;
   }
@@ -1112,7 +1109,7 @@ $('#song-bar').addEventListener('click', e => { if (!live() || songIx < 0) retur
 
 /* ---------- the journey scale ---------- */
 const rail = $('#rail'), tip = $('#tip'), pin = $('#pin'), segs = [], grail = $('#g-rail'), gtip = $('#g-tip');
-const label = c => `${CH[c].name}<small>${CH[c].no} · ${CH[c].place}</small>`;
+const label = c => `<span class="nm">${CH[c].name}</span><small>${CH[c].place}</small>`;
 function showTip() { tip.innerHTML = hoverTip || label(Math.max(room, 0)); }
 function hover(el, html) { const on = () => { hoverTip = html; showTip(); }, off = () => { hoverTip = ''; showTip(); }; el.addEventListener('pointerenter', on); el.addEventListener('focus', on); el.addEventListener('pointerleave', off); el.addEventListener('blur', off); }
 CH.forEach((ch, c) => {
@@ -1130,7 +1127,7 @@ CH.forEach((ch, c) => {
   gb.addEventListener('pointerenter', gOn); gb.addEventListener('focus', gOn); gb.addEventListener('pointerleave', gOff); gb.addEventListener('blur', gOff);
   gb.addEventListener('click', () => enter(c ? ch.s0 + 2 : null)); grail.appendChild(gb);
 });
-REG.forEach((r, i) => { if (!r.i || r.soft) return; const b = document.createElement('button'); b.type = 'button'; b.className = 'tick'; b.style.left = (r.s / TOTAL * 100) + '%'; b.setAttribute('aria-label', `${CH[r.c].name}: ${r.name}`); hover(b, `${r.name}<small>${CH[r.c].name}</small>`); b.addEventListener('click', e => { e.stopPropagation(); jump(r.s + .5, i); }); rail.appendChild(b); });
+REG.forEach((r, i) => { if (!r.i || r.soft) return; const b = document.createElement('button'); b.type = 'button'; b.className = 'tick'; b.style.left = (r.s / TOTAL * 100) + '%'; b.setAttribute('aria-label', `${CH[r.c].name}: ${r.name}`); hover(b, `<span class="nm">${r.name}</span><small>${CH[r.c].name}</small>`); b.addEventListener('click', e => { e.stopPropagation(); jump(r.s + .5, i); }); rail.appendChild(b); });
 
 /* ---------- input: scroll walks, drag looks ---------- */
 const LOOK = .0046;
@@ -1207,7 +1204,8 @@ function frame(ms) {
   songUi(t);
 
   /* camera: follows the route over the land, leans toward what matters, makes room for the words, then your own look on top */
-  const cp0 = pos(s), tg = tan(s), ey = eyeAt(s); eyeY = Math.abs(s - ps) > 30 || eyeY == null ? ey : eyeY + (ey - eyeY) * (1 - Math.exp(-dt * 7));
+  const cp0 = pos(s), tg = tan(s), ey = Math.max(eyeAt(s), vel > 4 ? eyeAt(Math.min(s + vel * .12, MAX_S)) - .6 : 0, vel < -4 ? eyeAt(Math.max(s + vel * .12, 0)) - .6 : 0);
+  eyeY = Math.abs(s - ps) > 30 || eyeY == null ? ey : Math.max(eyeY + (ey - eyeY) * (1 - Math.exp(-dt * (ey > eyeY ? 14 : 5))), ey - .35);
   const cam = [cp0[0], eyeY + Math.sin(t * .5) * .05 + pu * .03, cp0[2]];
   const sky = skyAt(s, cam);
   let bx = tg[0], by = tg[1] * .7, bz = tg[2];
@@ -1313,7 +1311,7 @@ if (document.fonts && document.fonts.load) FACES.forEach(f => document.fonts.loa
 
 /* ---------- start ---------- */
 async function boot() {
-  try { await Promise.race([Promise.all(["400 60px 'Instrument Serif'", "italic 400 60px 'Instrument Serif'", "400 20px 'Geist'", "500 12px 'Geist Mono'"].map(f => document.fonts.load(f))), new Promise(r => setTimeout(r, 3000))]); } catch (e) {}
+  try { await Promise.race([Promise.all(["400 60px 'Instrument Serif'", "italic 400 60px 'Instrument Serif'", "400 20px 'Geist'", "500 12px 'Geist Mono'", "300 20px Jost", "400 13px Jost"].map(f => document.fonts.load(f))), new Promise(r => setTimeout(r, 3000))]); } catch (e) {}
   await new Promise(r => setTimeout(r, 30));
   layShelves(); buildLand(); buildTextures(); buildProps(); showTip(); soundUi(); songUi(0);
   landReady = true; gateUi();
@@ -1327,7 +1325,7 @@ async function boot() {
 boot();
 
 /* small handle for checking the build */
-window.__lw = { clear() { const out = []; CH.forEach((ch, c) => { let a = 1e9, b = 1e9, up = 0; for (let x = ch.s0; x < ch.s1; x += 1.5) { const p = pos(x), t = tan(x), l = Math.hypot(t[0], t[2]) || 1, h0 = Hgt(p[0], p[2]); let hm = h0; for (let d = 1; d <= 10; d++) for (const w of [-4, -2, 0, 2, 4]) hm = Math.max(hm, Hgt(p[0] + t[0] / l * d - t[2] / l * w, p[2] + t[2] / l * d + t[0] / l * w)); a = Math.min(a, h0 + 1.75 - hm); const e = eyeAt(x); b = Math.min(b, e - hm); up = Math.max(up, e - h0); } out.push([ch.name, +a.toFixed(2), +b.toFixed(2), +up.toFixed(2)]); }); return out; }, go(v) { target = s = v; }, by(d) { target = clamp(target + d, 0, MAX_S); }, look(y, p) { yaw = y; pitch = p; }, S, jump, rewind, ARC0, ARC1, TOTAL, REG, MEM, CH, SIGNS, NOTES, ANCH, cursorCss, get state() { return { s: Math.round(s), room, reg, silent: A.silent, time: +nowPlaying().toFixed(1), song: songIx, drawn: order.length, words: drawn, pace: +pace.toFixed(1), note: noteNow ? noteNow.text.slice(0, 24) : null, scat: scN, rew: !!rew, cursor: curKey }; } };
+window.__lw = { clear() { const out = []; CH.forEach((ch, c) => { let a = 1e9, b = 1e9, up = 0; for (let x = ch.s0; x < ch.s1; x += 1.5) { const p = pos(x), t = tan(x), l = Math.hypot(t[0], t[2]) || 1, h0 = Hgt(p[0], p[2]); let hm = h0; for (let d = 1; d <= 10; d++) for (const w of [-4, -2, 0, 2, 4]) hm = Math.max(hm, Hgt(p[0] + t[0] / l * d - t[2] / l * w, p[2] + t[2] / l * d + t[0] / l * w)); a = Math.min(a, h0 + 1.75 - hm); const e = eyeAt(x); b = Math.min(b, e - hm); up = Math.max(up, e - h0); } out.push([ch.name, +a.toFixed(2), +b.toFixed(2), +up.toFixed(2)]); }); return out; }, go(v) { target = s = v; }, Hgt, pos, tan, eyeAt, by(d) { target = clamp(target + d, 0, MAX_S); }, look(y, p) { yaw = y; pitch = p; }, S, jump, rewind, ARC0, ARC1, TOTAL, REG, MEM, CH, SIGNS, NOTES, ANCH, cursorCss, get state() { return { clr: +(eyeY - Hgt(pos(s)[0], pos(s)[2])).toFixed(2), s: Math.round(s), room, reg, silent: A.silent, time: +nowPlaying().toFixed(1), song: songIx, drawn: order.length, words: drawn, pace: +pace.toFixed(1), note: noteNow ? noteNow.text.slice(0, 24) : null, scat: scN, rew: !!rew, cursor: curKey }; } };
 })();
 </script>
 </body>
