@@ -9,6 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <!-- one face per place; each on its own line so that one bad request cannot take the others down -->
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap" rel="stylesheet">
@@ -30,8 +32,8 @@
   --hud:#EDECE8;
   --scrim:rgba(6,7,10,.62);
   --f-sans:'Geist',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
-  --f-mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
-  --f-ui:'Jost','Geist',ui-sans-serif,system-ui,sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --f-ui:'Archivo','Geist',ui-sans-serif,system-ui,sans-serif;
   --f-serif:'Instrument Serif','Iowan Old Style','Palatino Linotype',Georgia,serif;
   color-scheme:dark;
 }
@@ -44,9 +46,11 @@ canvas#gl{opacity:0;transition:opacity 1.8s ease}
 canvas#gl.on{opacity:1}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 :focus-visible{outline:2px solid var(--hot);outline-offset:4px}
-.lab{font:400 13px/1.4 var(--f-ui);letter-spacing:.03em;margin:0}
-#grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;mix-blend-mode:overlay;
+.lab{font:500 10.5px/1.5 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;margin:0;text-shadow:0 1px 12px rgba(0,0,0,.25)}
+#grain{position:fixed;inset:-90px;pointer-events:none;z-index:1;opacity:.62;mix-blend-mode:overlay;animation:grain .9s steps(5) infinite;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='.5'/></svg>")}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-37px,22px)}40%{transform:translate(28px,-41px)}60%{transform:translate(-19px,-17px)}80%{transform:translate(44px,31px)}100%{transform:translate(0,0)}}
+@media (prefers-reduced-motion:reduce){#grain{animation:none}}
 #vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse 80% 78% at 50% 46%,transparent 55%,rgba(0,0,0,.4) 100%)}
 
 /* ---------- gate: no panel. The walk's first place is the page: the eclipse over the water, the title on the water
@@ -72,10 +76,10 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 #begin[disabled]{opacity:.4;cursor:wait}
 #begin .ecl{width:26px;height:26px;border-radius:50%;background:#040408;transform:scale(calc(1 + var(--pu,0) * .12));
   box-shadow:0 0 0 1px rgba(255,226,196,.75),0 0 calc(8px + var(--pu,0) * 26px) calc(1px + var(--pu,0) * 4px) rgba(255,185,130,.55)}
-#begin .lab{position:relative;padding-bottom:5px;font-size:15px;letter-spacing:.06em}
+#begin .lab{position:relative;padding-bottom:5px;font-size:11px;letter-spacing:.26em}
 #begin .lab::after{content:"";position:absolute;left:0;right:.16em;bottom:0;height:1px;background:currentColor;transform:scaleX(.35);transform-origin:left;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
 #begin:hover .lab::after,#begin:focus-visible .lab::after{transform:none}
-#status{font:400 13px/1.5 var(--f-ui);letter-spacing:.03em;color:var(--mut);margin:0;min-height:1.5em}
+#status{font:500 10.5px/1.5 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--mut);margin:0;min-height:1.5em}
 #status.bad{color:#ff9c8a}
 #g-scale{color:var(--ink)}
 #g-scale .seg{pointer-events:auto}
@@ -90,7 +94,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 /* the song: what is playing and how far into it you are */
 #song{position:absolute;left:18px;top:14px;width:min(250px,54vw);display:grid;gap:5px;pointer-events:auto}
 #song .lab{opacity:.7}
-#song-t{font:300 23px/1.1 var(--f-ui);letter-spacing:.06em;text-transform:lowercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#song-t{font:500 20px/1.15 var(--f-ui);letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #song.swap #song-t{animation:swap .9s cubic-bezier(.2,.8,.2,1)}
 @keyframes swap{from{opacity:0;transform:translateY(10px);filter:blur(4px)}}
 #song-bar{position:relative;height:16px;cursor:pointer;display:block;width:100%}
@@ -111,26 +115,27 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 
 /* the story: one sentence at a time, left of centre and just under the horizon, where the ground is plain.
    Close enough to the middle to read with a glance, clear of the titles and the sky. It never moves and nothing waits for it. */
-#note{position:absolute;left:clamp(22px,8.5vw,150px);top:56%;width:min(23rem,33vw);display:grid;gap:9px;color:var(--note,var(--hud));opacity:0;transform:translateY(8px);transition:opacity 1s ease,transform 1.2s cubic-bezier(.2,.8,.2,1)}
-#note::before{content:"";position:absolute;inset:-46px -70px;background:radial-gradient(closest-side,var(--scrim),transparent);opacity:.55;z-index:-1}
-#note.on{opacity:.96;transform:none}
-#note .lab{font-size:12px;opacity:.7;display:flex;align-items:center;gap:10px}
-#note .lab::after{content:"";flex:0 0 34px;height:1px;background:currentColor;opacity:.5}
-#note p{margin:0;font:400 clamp(17px,1.36vw,21px)/1.42 var(--f-sans);letter-spacing:-.004em;text-wrap:pretty}
+#plaque{position:absolute;bottom:17%;width:min(370px,calc(100vw - 44px));color:var(--note,var(--hud));pointer-events:none;opacity:0;will-change:opacity,transform}
+#plaque.l{left:clamp(22px,7vw,110px);text-align:left}
+#plaque.r{right:clamp(22px,7vw,110px);text-align:right}
+#plaque::before{content:"";position:absolute;inset:-56px -90px;background:radial-gradient(closest-side,var(--scrim),transparent);opacity:.42;z-index:-1}
+#pl-k{font:500 11px/1.4 var(--f-mono);letter-spacing:.18em;text-transform:uppercase;color:var(--acc,var(--hot));margin:0 0 11px}
+#pl-t{margin:0;font:420 16px/1.65 var(--f-ui);text-wrap:pretty;text-shadow:0 1px 14px rgba(0,0,0,.2)}
+#pl-t span{transition:opacity 1.1s ease,filter 1.1s ease}
+#pl-c{font:500 10px/1.4 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;opacity:.5;margin:13px 0 0}
 #notes-b{position:absolute;right:16px;top:44px;pointer-events:auto;opacity:.6;border-bottom:1px solid currentColor;padding-bottom:3px}
 #notes-b:hover{opacity:1}
 #hint{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);opacity:.75;white-space:nowrap;transition:opacity 1.6s}
 #hint.done{opacity:0}
 #endnote{position:absolute;left:50%;top:58%;transform:translateX(-50%);display:grid;justify-items:center;gap:16px;text-align:center;width:min(32rem,calc(100vw - 40px));opacity:0;visibility:hidden;transition:opacity 1.6s,visibility 1.6s}
 #endnote.on{opacity:1;visibility:visible}
-#endnote p{margin:0;font:300 clamp(22px,2.4vw,32px)/1.25 var(--f-ui);letter-spacing:.04em}
+#endnote p{margin:0;font:420 clamp(18px,1.7vw,22px)/1.6 var(--f-ui)}
 #endnote button{pointer-events:auto;border-bottom:1px solid currentColor;padding-bottom:4px}
 
 /* the journey: ten places on one line */
 .scale{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:min(780px,calc(100vw - 36px));display:grid;gap:9px;justify-items:center}
-.tip{font:300 clamp(17px,1.5vw,20px)/1.1 var(--f-ui);letter-spacing:.06em;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-.tip .nm{text-transform:lowercase}
-.tip small{font:400 13px/1 var(--f-ui);letter-spacing:.03em;opacity:.6;margin-left:1em}
+.tip{font:500 clamp(15px,1.3vw,17px)/1.1 var(--f-ui);letter-spacing:.01em;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.tip small{font:500 10px/1 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;opacity:.6;margin-left:1.2em}
 .rail{position:relative;width:100%;height:30px;pointer-events:auto}
 .rail::before{content:"";position:absolute;left:0;right:0;top:14px;height:1px;background:currentColor;opacity:.4}
 .seg{position:absolute;top:0;height:30px;display:block}
@@ -145,15 +150,15 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 /* a far jump along the scale is crossed behind one short blink */
 #veil{position:fixed;inset:0;z-index:4;pointer-events:none;background:var(--ground);opacity:0;transition:opacity .24s ease}
 #veil.on{opacity:1}
-#toast{position:fixed;left:50%;top:84px;transform:translateX(-50%);max-width:min(34rem,calc(100vw - 40px));padding:10px 14px;background:rgba(8,8,10,.92);border:1px solid #37373C;font:400 13.5px/1.5 var(--f-ui);color:var(--ink);opacity:0;transition:opacity .4s;z-index:7;pointer-events:none}
+#toast{position:fixed;left:50%;top:84px;transform:translateX(-50%);max-width:min(34rem,calc(100vw - 40px));padding:10px 14px;background:rgba(8,8,10,.92);border:1px solid #37373C;font:420 14px/1.55 var(--f-ui);color:var(--ink);opacity:0;transition:opacity .4s;z-index:7;pointer-events:none}
 #toast.on{opacity:1}
 @media (max-width:720px){
   #hint{white-space:normal;text-align:center;width:70vw;bottom:150px}
-  #note{left:22px;right:22px;width:auto;top:60%}
+  #plaque,#plaque.l,#plaque.r{left:50%;right:auto;transform:translateX(-50%);text-align:center;bottom:150px;width:min(84vw,360px)} #pl-t{font-size:14.5px}
   #volume{width:84px}
   .tip small{display:none}
 }
-@media (prefers-reduced-motion:reduce){ #gate,#hud,#endnote,#veil,#note{transition-duration:.01s} #song.swap #song-t{animation:none} }
+@media (prefers-reduced-motion:reduce){ #gate,#hud,#endnote,#veil,#plaque,#pl-t span{transition-duration:.01s} #song.swap #song-t{animation:none} }
 </style>
 </head>
 <body>
@@ -184,7 +189,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   </div>
   <label id="vol" class="lab"><button id="sound" class="lab" type="button" hidden>Add sound</button><span id="vol-l">Volume</span><input type="range" id="volume" min="0" max="100" value="80" aria-label="Volume"></label>
   <button id="notes-b" class="lab" type="button" aria-label="Show or hide the story notes">Notes on</button>
-  <div id="note"><span class="lab" id="note-k"></span><p id="note-t"></p></div>
+  <div id="plaque" class="l" aria-live="polite"><p id="pl-k"></p><p id="pl-t"></p><p id="pl-c"></p></div>
   <div id="hint" class="lab">Scroll to walk, drag to look</div>
   <div id="endnote"><p>Only the heartbeat is left, as it was at the start.</p><button id="again" class="lab" type="button">Walk me back</button></div>
   <div id="scale" class="scale"><div id="tip" class="tip"></div><nav id="rail" class="rail" aria-label="Places along the walk"><span id="pin"></span></nav></div>
@@ -361,7 +366,7 @@ function Hgt(x, z) {
 /* landmarks along the whole route, in walking order. Each group of story notes gives two: a quiet lead-in as its first
    note comes up (the song is set to its run-up), and the arrival as you pass its last.
    The notes themselves are not in the world: they sit as one small caption in a corner, for whoever wants them. */
-const REG = [], SIGNS = [], NOTES = [];
+const REG = [], SIGNS = [], NOTES = [], STORY = [];
 CH.forEach((ch, c) => {
   let L = [];
   ch.marks.forEach(m => {
@@ -374,6 +379,7 @@ CH.forEach((ch, c) => {
   ch.st.forEach(st => {
     const first = ch.s0 + st.at, last = first + (st.notes.length - 1) * NGAP, arr = last - 12, lead = Math.max(ch.s0 + 1, first - 58);
     st.notes.forEach((text, i) => NOTES.push({ s: first + i * NGAP, c, text, n: n++ }));
+    STORY.push({ s0: first, s1: last, side: st.side === 'r' ? 'r' : 'l', c, name: st.name, notes: st.notes });
     L.push({ s: lead, t: st.t, soft: arr - lead, name: '', c }); L.push({ s: arr, t: st.t, name: st.name, c });
   });
   L.sort((a, b) => a.s - b.s);
@@ -586,27 +592,28 @@ function scatterUpdate(cam, rm, sNow) {
 }
 const PTS = prog(`attribute vec4 aB;
 uniform mat4 uVP; uniform vec3 uCam,uBox,uDrift; uniform float uTime,uSize,uH,uPulse;
-varying float vA; varying float vS;
+varying float vA; varying float vS; varying float vK;
 void main(){
   vec3 w=aB.xyz*uBox+uDrift*uTime+vec3(sin(uTime*.2+aB.w*40.),cos(uTime*.17+aB.w*31.),sin(uTime*.13+aB.w*17.))*.8;
   vec3 l=(fract((w-uCam)/uBox+.5)-.5)*uBox; float d=length(l);
   gl_Position=uVP*vec4(uCam+l,1.);
-  float r=uSize*(.03+aB.w*.07)*(1.+uPulse*.7*step(.6,fract(aB.w*7.)));
-  gl_PointSize=clamp(r*uH/max(d,.3),1.,48.);
+  vK=step(.93,fract(aB.w*23.));
+  float r=uSize*(.03+aB.w*.07)*(1.+uPulse*.7*step(.6,fract(aB.w*7.)))*mix(1.,3.,vK);
+  gl_PointSize=clamp(r*uH/max(d,.3),1.,mix(48.,72.,vK));
   float m=max(abs(l.x)/uBox.x,max(abs(l.y)/uBox.y,abs(l.z)/uBox.z));
   vA=smoothstep(.5,.34,m)*smoothstep(1.,4.,d)*(.55+.45*sin(uTime*(.4+aB.w)+aB.w*90.)); vS=aB.w;
 }`,
-`precision mediump float; varying float vA; varying float vS; uniform vec3 uCA,uCB; uniform float uAdd;
-void main(){ float a=smoothstep(.5,.05,length(gl_PointCoord-.5))*vA*.8; vec3 c=mix(uCA,uCB,step(.5,fract(vS*13.))); gl_FragColor=vec4(c*a,a*(1.-uAdd)); }`, 'aB');
+`precision mediump float; varying float vA; varying float vS; varying float vK; uniform vec3 uCA,uCB; uniform float uAdd;
+void main(){ float l=length(gl_PointCoord-.5); float a=mix(smoothstep(.5,.05,l)*.8,(smoothstep(.5,.36,l)*.55+smoothstep(.5,0.,l)*.25)*.24,vK)*vA; vec3 c=mix(uCA,uCB,step(.5,fract(vS*13.))); gl_FragColor=vec4(c*a,a*(1.-uAdd)); }`, 'aB');
 const QUAD = prog(`attribute vec2 aP; uniform mat4 uVP,uM; varying vec2 vUv; varying vec3 vW;
 void main(){ vec4 w=uM*vec4(aP,0.,1.); vW=w.xyz; vUv=aP+.5; gl_Position=uVP*w; }`,
 `precision mediump float; uniform sampler2D uT; uniform vec3 uTint,uCam; uniform float uAlpha,uFog,uAdd,uNear; varying vec2 vUv; varying vec3 vW;
-uniform vec3 uTint2; uniform float uTwo;
-void main(){ float d=distance(vW,uCam); vec4 tx=texture2D(uT,vUv); float a=tx.a*uAlpha*exp(-d*uFog)*mix(1.,smoothstep(.6,3.2,d),uNear); gl_FragColor=vec4(mix(uTint,uTint2,tx.r*uTwo)*a,a*(1.-uAdd)); }`, 'aP');
+uniform vec3 uTint2; uniform float uTwo,uRev;
+void main(){ float d=distance(vW,uCam); vec4 tx=texture2D(uT,vUv); float a=tx.a*uAlpha*exp(-d*uFog)*mix(1.,smoothstep(.6,3.2,d),uNear)*(1.-smoothstep(uRev-.045,uRev,vUv.x)); gl_FragColor=vec4(mix(uTint,uTint2,tx.r*uTwo)*a,a*(1.-uAdd)); }`, 'aP');
 
 const bufTri = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bufTri); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
 const bufQuad = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bufQuad); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-.5, -.5, .5, -.5, -.5, .5, .5, .5]), gl.STATIC_DRAW);
-const NPTS = 420, BOX = [90, 54, 90], bufPts = gl.createBuffer();
+const NPTS = 900, BOX = [90, 54, 90], bufPts = gl.createBuffer();
 { const r = rng(7), a = new Float32Array(NPTS * 4); for (let i = 0; i < a.length; i++) a[i] = r(); gl.bindBuffer(gl.ARRAY_BUFFER, bufPts); gl.bufferData(gl.ARRAY_BUFFER, a, gl.STATIC_DRAW); }
 const TN = 84, tv = new Float32Array((TN + 1) * (TN + 1) * 3), bufTer = gl.createBuffer(), bufTerI = gl.createBuffer(); let tci = 1e9, tcj = 1e9;
 { const ix = new Uint16Array(TN * TN * 6); let k = 0; for (let j = 0; j < TN; j++) for (let i = 0; i < TN; i++) { const a = j * (TN + 1) + i, b = a + 1, c = a + TN + 1, d = c + 1; ix[k++] = a; ix[k++] = c; ix[k++] = b; ix[k++] = b; ix[k++] = c; ix[k++] = d; } gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufTerI); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, ix, gl.STATIC_DRAW); }
@@ -646,6 +653,12 @@ function line(x, x0, y0, x1, y1, passes, lw, rd, bow = 0) {
   }
 }
 const poly = (x, pts, passes, lw, rd, close = true) => { for (let i = 0; i < pts.length - (close ? 0 : 1); i++) { const a = pts[i], b = pts[(i + 1) % pts.length]; line(x, a[0], a[1], b[0], b[1], passes, lw, rd); } };
+function hatch(x, pts, gap, ang, rd, al = .42) {
+  x.save(); x.beginPath(); pts.forEach((p, i) => i ? x.lineTo(p[0], p[1]) : x.moveTo(p[0], p[1])); x.closePath(); x.clip(); x.globalAlpha *= al;
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]), cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2, R = Math.hypot(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) / 2 + 6, c = Math.cos(ang), n = Math.sin(ang);
+  for (let d = -R; d <= R; d += gap * (.8 + rd() * .4)) { const ox = cx - n * d, oy = cy + c * d; line(x, ox - c * R, oy - n * R, ox + c * R, oy + n * R, 1, 1.7, rd); }
+  x.restore();
+}
 const soft = (stops) => tex(256, 256, x => { const gr = x.createRadialGradient(128, 128, 0, 128, 128, 128); stops.forEach(s => gr.addColorStop(s[0], `rgba(255,255,255,${s[1]})`)); x.fillStyle = gr; x.fillRect(0, 0, 256, 256); });
 function words(str, font, size, W = 1024, H = 256, maxRows = 3) {
   return tex(W, H, x => {
@@ -661,6 +674,7 @@ const T = {};
 function buildTextures() {
   const rd = rng(42);
   T.ring = tex(512, 512, x => oval(x, 256, 256, 246, 246, 0, 2, 2.2, rd));
+  T.thread = tex(16, 512, x => { x.globalAlpha = .8; x.fillRect(7, 0, 2, 512); });
   T.glow = soft([[0, 1], [.2, .7], [.5, .16], [1, 0]]);
   T.disc = soft([[0, 1], [.42, 1], [.5, .3], [1, 0]]);
   T.hard = soft([[0, 1], [.9, 1], [.97, 0], [1, 0]]);
@@ -683,17 +697,17 @@ function buildTextures() {
   T.stone = NUM.map(n => tex(256, 512, x => { line(x, 52, 500, 58, 150, 2, 4, rd); line(x, 204, 500, 198, 150, 2, 4, rd); line(x, 58, 150, 128, 96, 2, 4, rd, -.35); line(x, 128, 96, 198, 150, 2, 4, rd, -.35); x.font = `400 ${n.length > 3 ? 66 : 90}px 'Instrument Serif',Georgia,serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(n, 128, 250); }));
   T.gnomon = tex(256, 1024, x => { poly(x, [[50, 1012], [216, 1012], [74, 18]], 2, 5, rd); for (let i = 1; i < 9; i++) { const y = 1012 - i * 108; line(x, 58 + i * 2, y, 216 - i * 16.4, y, 1, 2, rd); } });
   T.clock = tex(512, 512, x => { oval(x, 256, 256, 236, 236, 0, 3, 6, rd); for (let i = 0; i < 12; i++) { const a = i / 12 * TAU; line(x, 256 + Math.cos(a) * 180, 256 + Math.sin(a) * 180, 256 + Math.cos(a) * 208, 256 + Math.sin(a) * 208, 2, 5, rd); } line(x, 256, 262, 256, 96, 2, 6, rd); line(x, 256, 258, 344, 300, 3, 9, rd); oval(x, 150, 34, 46, 26, -.5, 2, 5, rd); oval(x, 362, 34, 46, 26, .5, 2, 5, rd); });
-  T.house = tex(512, 512, x => { poly(x, [[204, 500], [100, 500], [100, 262], [412, 262], [412, 500], [308, 500]], 2, 5, rd, false); poly(x, [[70, 270], [256, 112], [442, 270]], 2, 5, rd, false); poly(x, [[204, 500], [204, 336], [308, 336], [308, 500]], 2, 4, rd, false); for (const wx of [126, 334]) { poly(x, [[wx, 330], [wx + 52, 330], [wx + 52, 392], [wx, 392]], 2, 3.5, rd); line(x, wx + 26, 330, wx + 26, 392, 1, 2.5, rd); } poly(x, [[338, 186], [338, 122], [372, 122], [372, 214]], 2, 4, rd, false); });
-  T.tower = tex(256, 1024, x => { poly(x, [[70, 1016], [70, 250], [128, 60], [186, 250], [186, 1016]], 2, 5, rd, false); line(x, 70, 250, 186, 250, 2, 4, rd); line(x, 104, 420, 104, 330, 2, 4, rd); line(x, 152, 420, 152, 330, 2, 4, rd); line(x, 104, 330, 128, 300, 2, 4, rd, -.3); line(x, 128, 300, 152, 330, 2, 4, rd, -.3); oval(x, 128, 382, 15, 20, 0, 2, 4, rd); });
-  T.ctower = tex(256, 1024, x => { line(x, 108, 1016, 116, 300, 2, 5, rd); line(x, 148, 1016, 140, 300, 2, 5, rd); poly(x, [[70, 300], [186, 300], [208, 196], [48, 196]], 2, 5, rd); line(x, 60, 248, 196, 248, 1, 3, rd); line(x, 128, 196, 128, 70, 2, 4, rd); for (let i = 0; i < 6; i++) line(x, 110, 420 + i * 100, 146, 470 + i * 100, 1, 2.5, rd); });
-  T.arch = tex(512, 1024, x => { line(x, 96, 1010, 96, 380, 2, 7, rd); line(x, 416, 1010, 416, 380, 2, 7, rd); line(x, 150, 1010, 150, 400, 1, 3, rd); line(x, 362, 1010, 362, 400, 1, 3, rd); const pts = []; for (let i = 0; i <= 14; i++) { const a = Math.PI + i / 14 * Math.PI; pts.push([256 + Math.cos(a) * 160, 380 + Math.sin(a) * 180]); } poly(x, pts, 2, 7, rd, false); const p2 = []; for (let i = 0; i <= 14; i++) { const a = Math.PI + i / 14 * Math.PI; p2.push([256 + Math.cos(a) * 106, 400 + Math.sin(a) * 124]); } poly(x, p2, 1, 3, rd, false); });
-  T.shed = tex(512, 512, x => { poly(x, [[96, 500], [372, 500], [372, 290], [96, 290]], 2, 5, rd); poly(x, [[72, 300], [240, 196], [396, 300]], 2, 5, rd, false); poly(x, [[150, 500], [150, 360], [220, 360], [220, 500]], 2, 4, rd, false); poly(x, [[268, 340], [330, 340], [330, 400], [268, 400]], 2, 3, rd); oval(x, 440, 468, 48, 14, 0, 2, 4, rd); line(x, 392, 468, 416, 498, 2, 4, rd, .3); line(x, 488, 468, 464, 498, 2, 4, rd, -.3); line(x, 416, 498, 464, 498, 2, 4, rd); });
+  T.house = tex(512, 512, x => { poly(x, [[204, 500], [100, 500], [100, 262], [412, 262], [412, 500], [308, 500]], 2, 5, rd, false); poly(x, [[70, 270], [256, 112], [442, 270]], 2, 5, rd, false); poly(x, [[204, 500], [204, 336], [308, 336], [308, 500]], 2, 4, rd, false); for (const wx of [126, 334]) { poly(x, [[wx, 330], [wx + 52, 330], [wx + 52, 392], [wx, 392]], 2, 3.5, rd); line(x, wx + 26, 330, wx + 26, 392, 1, 2.5, rd); } poly(x, [[338, 186], [338, 122], [372, 122], [372, 214]], 2, 4, rd, false); hatch(x, [[70, 270], [256, 112], [442, 270]], 10, -.85, rd); hatch(x, [[100, 262], [204, 262], [204, 500], [100, 500]], 12, .9, rd, .3); hatch(x, [[308, 262], [412, 262], [412, 500], [308, 500]], 12, .9, rd, .3); });
+  T.tower = tex(256, 1024, x => { poly(x, [[70, 1016], [70, 250], [128, 60], [186, 250], [186, 1016]], 2, 5, rd, false); line(x, 70, 250, 186, 250, 2, 4, rd); line(x, 104, 420, 104, 330, 2, 4, rd); line(x, 152, 420, 152, 330, 2, 4, rd); line(x, 104, 330, 128, 300, 2, 4, rd, -.3); line(x, 128, 300, 152, 330, 2, 4, rd, -.3); oval(x, 128, 382, 15, 20, 0, 2, 4, rd); hatch(x, [[70, 1016], [70, 250], [186, 250], [186, 1016]], 14, .75, rd, .3); });
+  T.ctower = tex(256, 1024, x => { line(x, 108, 1016, 116, 300, 2, 5, rd); line(x, 148, 1016, 140, 300, 2, 5, rd); poly(x, [[70, 300], [186, 300], [208, 196], [48, 196]], 2, 5, rd); hatch(x, [[70, 300], [186, 300], [208, 196], [48, 196]], 9, -.8, rd); line(x, 60, 248, 196, 248, 1, 3, rd); line(x, 128, 196, 128, 70, 2, 4, rd); for (let i = 0; i < 6; i++) line(x, 110, 420 + i * 100, 146, 470 + i * 100, 1, 2.5, rd); });
+  T.arch = tex(512, 1024, x => { line(x, 96, 1010, 96, 380, 2, 7, rd); line(x, 416, 1010, 416, 380, 2, 7, rd); line(x, 150, 1010, 150, 400, 1, 3, rd); line(x, 362, 1010, 362, 400, 1, 3, rd); hatch(x, [[96, 1010], [96, 390], [150, 400], [150, 1010]], 12, .8, rd, .35); hatch(x, [[362, 1010], [362, 400], [416, 390], [416, 1010]], 12, .8, rd, .35); const pts = []; for (let i = 0; i <= 14; i++) { const a = Math.PI + i / 14 * Math.PI; pts.push([256 + Math.cos(a) * 160, 380 + Math.sin(a) * 180]); } poly(x, pts, 2, 7, rd, false); const p2 = []; for (let i = 0; i <= 14; i++) { const a = Math.PI + i / 14 * Math.PI; p2.push([256 + Math.cos(a) * 106, 400 + Math.sin(a) * 124]); } poly(x, p2, 1, 3, rd, false); });
+  T.shed = tex(512, 512, x => { poly(x, [[96, 500], [372, 500], [372, 290], [96, 290]], 2, 5, rd); poly(x, [[72, 300], [240, 196], [396, 300]], 2, 5, rd, false); poly(x, [[150, 500], [150, 360], [220, 360], [220, 500]], 2, 4, rd, false); poly(x, [[268, 340], [330, 340], [330, 400], [268, 400]], 2, 3, rd); hatch(x, [[72, 300], [240, 196], [396, 300]], 10, -.85, rd); hatch(x, [[96, 500], [372, 500], [372, 290], [96, 290]], 13, .9, rd, .25); oval(x, 440, 468, 48, 14, 0, 2, 4, rd); line(x, 392, 468, 416, 498, 2, 4, rd, .3); line(x, 488, 468, 464, 498, 2, 4, rd, -.3); line(x, 416, 498, 464, 498, 2, 4, rd); });
   T.coin = tex(512, 512, x => { oval(x, 256, 256, 240, 240, 0, 3, 6, rd); oval(x, 256, 256, 204, 204, 0, 1, 2.5, rd); for (let i = 0; i < 44; i++) { const a = i / 44 * TAU; line(x, 256 + Math.cos(a) * 212, 256 + Math.sin(a) * 212, 256 + Math.cos(a) * 232, 256 + Math.sin(a) * 232, 1, 2.5, rd); } x.font = "400 270px 'Instrument Serif',Georgia,serif"; x.textAlign = 'center'; x.textBaseline = 'middle'; x.globalAlpha = .9; x.fillText('£', 256, 268); });
   T.pawn = tex(128, 512, x => { oval(x, 64, 96, 34, 34, 0, 2, 5, rd); line(x, 58, 132, 18, 498, 2, 5, rd); line(x, 70, 132, 110, 498, 2, 5, rd); line(x, 14, 500, 114, 500, 2, 5, rd); });
   T.chair = tex(512, 512, x => { line(x, 80, 500, 86, 190, 2, 5, rd); line(x, 86, 190, 90, 340, 1, 3, rd); line(x, 86, 340, 196, 340, 2, 5, rd); line(x, 196, 340, 200, 500, 2, 5, rd); line(x, 120, 200, 122, 340, 1, 3, rd); line(x, 300, 372, 440, 372, 2, 5, rd); line(x, 316, 372, 310, 500, 2, 4, rd); line(x, 424, 372, 430, 500, 2, 4, rd); oval(x, 372, 352, 24, 8, 0, 2, 3, rd); line(x, 350, 352, 358, 372, 1, 3, rd); line(x, 394, 352, 386, 372, 1, 3, rd); oval(x, 402, 358, 8, 8, 0, 1, 2.5, rd); });
-  T.sign = tex(256, 512, x => { line(x, 128, 500, 128, 258, 2, 5, rd); poly(x, [[40, 96], [216, 100], [214, 254], [42, 250]], 2, 4, rd); line(x, 70, 150, 186, 152, 1, 3, rd); line(x, 70, 196, 160, 198, 1, 3, rd); });
+  T.sign = tex(256, 512, x => { line(x, 128, 500, 128, 258, 2, 5, rd); poly(x, [[40, 96], [216, 100], [214, 254], [42, 250]], 2, 4, rd); line(x, 70, 150, 186, 152, 1, 3, rd); line(x, 70, 196, 160, 198, 1, 3, rd); hatch(x, [[40, 96], [216, 100], [214, 254], [42, 250]], 11, -.7, rd, .25); });
   T.sitter = tex(512, 512, x => { oval(x, 222, 176, 40, 40, 0, 2, 5, rd); line(x, 214, 216, 188, 388, 2, 6, rd, .08); line(x, 188, 388, 304, 332, 2, 6, rd); line(x, 304, 332, 326, 446, 2, 6, rd); line(x, 216, 250, 300, 322, 2, 5, rd, -.2); line(x, 120, 452, 420, 452, 1, 3, rd); for (let i = 0; i < 7; i++) oval(x, 350 + i * 13, 436 - Math.sin(i * .9) * 8, 4, 4, 0, 1, 2.5, rd); });
-  T.door = tex(256, 512, x => { poly(x, [[46, 500], [48, 40], [208, 42], [210, 500]], 2, 5, rd, false); poly(x, [[76, 250], [78, 80], [180, 80], [180, 250]], 1, 3, rd); poly(x, [[76, 456], [78, 290], [180, 290], [180, 456]], 1, 3, rd); x.beginPath(); x.arc(186, 272, 6, 0, TAU); x.fill(); });
+  T.door = tex(256, 512, x => { poly(x, [[46, 500], [48, 40], [208, 42], [210, 500]], 2, 5, rd, false); poly(x, [[76, 250], [78, 80], [180, 80], [180, 250]], 1, 3, rd); poly(x, [[76, 456], [78, 290], [180, 290], [180, 456]], 1, 3, rd); x.beginPath(); x.arc(186, 272, 6, 0, TAU); x.fill(); hatch(x, [[76, 250], [78, 80], [180, 80], [180, 250]], 9, .8, rd); hatch(x, [[76, 456], [78, 290], [180, 290], [180, 456]], 9, .8, rd); });
 }
 
 /* ---------- things in the world: flat drawings hung in space, few and deliberate ---------- */
@@ -785,6 +799,13 @@ function buildProps() {
   sideGlow(-1, BL); sideGlow(1, RDc);
   for (let i = 0; i < 15; i++) { const s = S(6, .14 + i * .052); stand(6, T.pawn, s, -12.5, 1.7, 6.8, { tint: BL, alpha: .95, noSh: 1 }); stand(6, T.pawn, s, 12.5, 1.7, 6.8, { tint: RDc, alpha: .95, noSh: 1 }); }
   stand(6, T.chair, S(6, .95), 5, 4.4, 4.4, { alpha: .95 }); focus(S(6, .86), S(6, .97), .5, () => { const b = beside(S(6, .95), 5); return [b[0], gy(b) + 2, b[2]]; });
+
+  /* bulbs on long threads from the dark, warm, breathing with the music */
+  const WARM = hex('#ffc68a'), bulb = (c, s, side, hb, ph) => { stand(c, T.thread, s, side, .07, 60, { lift: hb + .15, alpha: .42, noSh: 1 });
+    stand(c, T.glow, s, side, 1.3, 1.3, { lift: hb - .65, add: 1, near: 0, tint: WARM, a: (o, G) => { o._a = (.3 + .22 * G.pu + .06 * Math.sin(G.t * 1.3 + ph)) * smooth(6, 16, Math.abs(o.s - G.s) + 4); } });
+    stand(c, T.disc, s, side, .26, .26, { lift: hb - .13, add: 1, near: 0, tint: WARM, a: (o, G) => { o._a = .8 + .2 * G.pu; } }); };
+  { const rb = rng(61); for (let i = 0; i < 12; i++) bulb(0, S(0, .2 + i * .06), (i % 2 ? 1 : -1) * (10 + rb() * 9), 4.5 + rb() * 6, i); }
+  { const rb = rng(62); for (let i = 0; i < 16; i++) bulb(6, S(6, .08 + i * .055), (i % 2 ? 1 : -1) * (7.5 + rb() * 2), 5 + rb() * 3.5, i); }
 
   /* VIII. THE DUNES: every colour from afar, and each one blue by the time you reach it */
   for (let i = 0; i < 7; i++) { const s = S(7, .14 + i * .115); stand(7, T.pane, s, (i % 2 ? 1 : -1) * (i % 2 ? 7.5 : 6.5), i % 2 ? 5 : 3.2, 30, { add: 1, near: 0, col: SPEC[i], tint: SPEC[i].slice(), a: (o, G) => { const k = 1 - smooth(4, 46, o.s - G.s); for (let j = 0; j < 3; j++) o.tint[j] = lerp(o.col[j], BLUE[j], k); o._a = (.55 + .35 * G.pu) * (i % 2 ? .8 : 1); o._s = 1 + .06 * G.pu; } }); }
@@ -907,7 +928,7 @@ function buildSign(g) {
   const st = TSTY[g.c], cw = st.half ? 1024 : 2048, c = mk(cw, 512), x = c.getContext('2d'), k = TKK;
   x.fillStyle = x.strokeStyle = '#000'; x.lineCap = 'round'; x.lineJoin = 'round'; x.textBaseline = 'alphabetic';
   const span = st.paint(x, cw, 512, g);
-  g.st = st; g.tex = upTex(c, gl.LUMINANCE_ALPHA); g.halo = st.halo ? haloOf(c, st.halo.blur, st.halo.n || 3) : null;
+  g.sp = [span[0] / cw, span[1] / cw]; g.st = st; g.tex = upTex(c, gl.LUMINANCE_ALPHA); g.halo = st.halo ? haloOf(c, st.halo.blur, st.halo.n || 3) : null;
   footAt(g, g.s, g.side, span[1] * k, EDGE, 50);
   const base = Math.max(g.P[1] - 1, Hgt(g.F[0] + g.R[0] * g.W / 2, g.F[1] + g.R[2] * g.W / 2)) + (st.lift || 0);
   g.qw = cw * k; g.qh = 512 * k; g.o = [g.F[0] - g.R[0] * span[0] * k, base + g.qh, g.F[1] - g.R[2] * span[0] * k];      // top-left corner of the whole mask
@@ -1067,7 +1088,9 @@ $('#sound').addEventListener('click', e => { e.preventDefault(); fileIn.click();
 const volEl = $('#volume'); volEl.value = Math.round(A.vol * 100);
 volEl.addEventListener('input', () => { A.vol = volEl.value / 100; if (A.master) A.master.gain.setTargetAtTime(A.vol, A.ctx.currentTime, .05); try { localStorage.setItem('lw-vol', String(A.vol)); } catch (e) {} });
 function soundUi() { $('#sound').hidden = !A.silent; $('#vol-l').hidden = A.silent; volEl.hidden = A.silent; }
-const noteEl = $('#note'), notesBtn = $('#notes-b');
+const noteEl = $('#plaque'), notesBtn = $('#notes-b'), plT = $('#pl-t'); let plNow = null, plA = 0, plSp = [];
+function plFill(g) { noteEl.className = g.side; $('#pl-k').textContent = `${CH[g.c].no} \u00b7 ${g.name}`; $('#pl-c').textContent = `${CH[g.c].name} \u00b7 ${CH[g.c].place}`;
+  plT.textContent = ''; plSp = g.notes.map(n => { const e = document.createElement('span'); e.textContent = n + ' '; e.style.opacity = 0; plT.appendChild(e); return e; }); }
 try { if (localStorage.getItem('lw-notes') === '0') notesOn = false; } catch (e) {}
 function notesUi() { notesBtn.textContent = notesOn ? 'Notes on' : 'Notes off'; notesBtn.setAttribute('aria-pressed', String(notesOn)); }
 notesBtn.addEventListener('click', () => { notesOn = !notesOn; notesUi(); try { localStorage.setItem('lw-notes', notesOn ? '1' : '0'); } catch (e) {} });
@@ -1188,17 +1211,24 @@ function frame(ms) {
   for (const g of SIGNS) {
     const ds = g.s - s; g.ds = ds; g.a = rew || ds < -8 || ds > g.far ? 0 : smooth(g.far, g.far * .74, ds) * smooth(-8, 6, ds) * (1 - gateK);
     const v = g.a * smooth(6, 24, ds) * smooth(100, 70, ds) * .42; if (v > lv) { lv = v; lead = g; }
+    if (g.a < .003) g.rt = null; else if (g.rt == null && (g.a > .3 || ds < 40)) g.rt = t;
   }
   textA = lerp(textA, lv, 1 - Math.exp(-dt * 3));
-  /* the story is one small caption in the corner. It changes as you walk and asks for nothing. */
-  let nn = null; if (entered && !rew && notesOn) for (const n of NOTES) { if (n.s - 34 > s) break; if (s < n.s + 36) nn = n; }
-  if (nn !== noteNow && t - noteAt > .7) { noteNow = nn; noteAt = t; noteEl.classList.remove('on'); clearTimeout(noteT); if (nn) noteT = setTimeout(() => { $('#note-k').textContent = `${CH[nn.c].name} \u00b7 ${nn.n + 1} of ${nn.of}`; $('#note-t').textContent = nn.text; noteEl.classList.add('on'); }, 620); }
+  /* the story: one plaque at a time, low on the side its notes belong to. It rises in as you near it, each sentence arrives
+     as you reach it, and it goes as you walk on. Scroll drives all of it; nothing waits. */
+  let pg = null, pa = 0; if (entered && !rew && notesOn) for (const g of STORY) { const a = smooth(g.s0 - 74, g.s0 - 40, s) * (1 - smooth(g.s1 + 24, g.s1 + 58, s)); if (a > pa) { pa = a; pg = g; } }
+  if (pg !== plNow && plA < .02) { plNow = pg; if (pg) plFill(pg); }
+  { const want = pg && pg === plNow ? pa : 0; plA = lerp(plA, want, 1 - Math.exp(-dt * 6)); if (plA < .002) plA = 0;
+    if (plNow) { const ain = smooth(plNow.s0 - 74, plNow.s0 - 40, s), gone = smooth(plNow.s1 + 24, plNow.s1 + 58, s); noteEl.style.opacity = plA.toFixed(3); noteEl.style.translate = `0 ${((1 - ain) * 18 - gone * 12).toFixed(1)}px`;
+      plSp.forEach((e, i) => { const v = smooth(plNow.s0 + i * NGAP - 70, plNow.s0 + i * NGAP - 42, s), o = (i ? v : 1).toFixed(2); if (e.style.opacity !== o) { e.style.opacity = o; e.style.filter = +o > .98 ? '' : `blur(${((1 - +o) * 5).toFixed(1)}px)`; } }); }
+    else noteEl.style.opacity = 0; }
 
   gateK = entered ? (gateK < .002 ? 0 : gateK * Math.exp(-dt * 1.5)) : 1;
   const pu = pulse * (REDUCED ? .3 : 1), Pl = palAt(s), dark = Pl.hud[0] + Pl.hud[1] + Pl.hud[2] < 1.2;
   const ck = ri + (dark ? 'd' : 'l') + (dragging ? 'g' : ''); if (ck !== curKey) { curKey = ck; cv.style.cursor = dragging ? 'grabbing' : cursorCss(ri, !dark); }
   hud.style.setProperty('--hud', `rgb(${Pl.hud.map(v => Math.round(v * 255)).join(',')})`);
   if (dark !== hotDark) { hotDark = dark; hud.style.setProperty('--hot', dark ? '#D8441A' : '#FF6B3D'); hud.style.setProperty('--scrim', dark ? 'rgba(255,252,244,.5)' : 'rgba(6,7,10,.62)'); hud.style.setProperty('--note', dark ? '#15130f' : '#F5F3EC'); }
+  { const k = dark ? .55 : 1; hud.style.setProperty('--acc', `rgb(${Pl.acc.map(v => Math.round(Math.min(1, v * k) * 255)).join(',')})`); }
   pin.style.left = (s / TOTAL * 100) + '%';
   $('#endnote').classList.toggle('on', entered && !rew && s > MAX_S - 5);
   songUi(t);
@@ -1250,7 +1280,7 @@ function frame(ms) {
 
   /* drawings, far to near */
   gl.useProgram(QUAD.p); gl.bindBuffer(gl.ARRAY_BUFFER, bufQuad); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-  u = QUAD.u; gl.uniformMatrix4fv(u.uVP, false, VP); gl.uniform3fv(u.uCam, cam); gl.uniform1i(u.uT, 0); gl.uniform1f(u.uTwo, 0); gl.activeTexture(gl.TEXTURE0);
+  u = QUAD.u; gl.uniformMatrix4fv(u.uVP, false, VP); gl.uniform3fv(u.uCam, cam); gl.uniform1i(u.uT, 0); gl.uniform1f(u.uTwo, 0); gl.uniform1f(u.uRev, 9); gl.activeTexture(gl.TEXTURE0);
   order.length = 0;
   for (const o of props) {
     let wgt = 1; if (o.room >= 0) { const rm = CH[o.room]; wgt = smooth(rm.s0 - 70, rm.s0 - 14, s) * (1 - smooth(rm.s1 + 14, rm.s1 + 60, s)); if (wgt <= 0) continue; }
@@ -1290,6 +1320,7 @@ function frame(ms) {
   const chase = Math.exp(-((t * 2.75) % 1) * 3);
   const say = (g, water) => {
     if (g.a < .004 || !g.tex) return; const st = g.st; let a = g.a; drawn++;
+    { const q = REDUCED ? 1 : g.rt == null ? 0 : clamp((t - g.rt) / 2.4, 0, 1), e = 1 - Math.pow(1 - q, 3); gl.uniform1f(u.uRev, q >= 1 ? 9 : g.sp[0] - .05 + e * (g.sp[1] + .12)); }
     if (st.pulse) a *= 1 - st.pulse + st.pulse * 1.6 * pu; if (st.flick) a *= .72 + .28 * chase;
     const tA = tintOf(st.tA, g), y = g.o[1] + (st.bob ? Math.sin(t * .45 + g.s) * .28 : 0);
     if (water) { gl.uniformMatrix4fv(u.uM, false, model(TOPL, g.o[0], 2 * g.g0 - y, g.o[2], g.qw, -g.qh, g.yaw, 0, 0)); gl.bindTexture(gl.TEXTURE_2D, g.tex); gl.uniform1f(u.uAdd, 0); gl.uniform1f(u.uTwo, 0); gl.uniform3fv(u.uTint, tA); gl.uniform1f(u.uAlpha, a * .22); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); return; }
@@ -1325,7 +1356,7 @@ async function boot() {
 boot();
 
 /* small handle for checking the build */
-window.__lw = { clear() { const out = []; CH.forEach((ch, c) => { let a = 1e9, b = 1e9, up = 0; for (let x = ch.s0; x < ch.s1; x += 1.5) { const p = pos(x), t = tan(x), l = Math.hypot(t[0], t[2]) || 1, h0 = Hgt(p[0], p[2]); let hm = h0; for (let d = 1; d <= 10; d++) for (const w of [-4, -2, 0, 2, 4]) hm = Math.max(hm, Hgt(p[0] + t[0] / l * d - t[2] / l * w, p[2] + t[2] / l * d + t[0] / l * w)); a = Math.min(a, h0 + 1.75 - hm); const e = eyeAt(x); b = Math.min(b, e - hm); up = Math.max(up, e - h0); } out.push([ch.name, +a.toFixed(2), +b.toFixed(2), +up.toFixed(2)]); }); return out; }, go(v) { target = s = v; }, Hgt, pos, tan, eyeAt, by(d) { target = clamp(target + d, 0, MAX_S); }, look(y, p) { yaw = y; pitch = p; }, S, jump, rewind, ARC0, ARC1, TOTAL, REG, MEM, CH, SIGNS, NOTES, ANCH, cursorCss, get state() { return { clr: +(eyeY - Hgt(pos(s)[0], pos(s)[2])).toFixed(2), s: Math.round(s), room, reg, silent: A.silent, time: +nowPlaying().toFixed(1), song: songIx, drawn: order.length, words: drawn, pace: +pace.toFixed(1), note: noteNow ? noteNow.text.slice(0, 24) : null, scat: scN, rew: !!rew, cursor: curKey }; } };
+window.__lw = { clear() { const out = []; CH.forEach((ch, c) => { let a = 1e9, b = 1e9, up = 0; for (let x = ch.s0; x < ch.s1; x += 1.5) { const p = pos(x), t = tan(x), l = Math.hypot(t[0], t[2]) || 1, h0 = Hgt(p[0], p[2]); let hm = h0; for (let d = 1; d <= 10; d++) for (const w of [-4, -2, 0, 2, 4]) hm = Math.max(hm, Hgt(p[0] + t[0] / l * d - t[2] / l * w, p[2] + t[2] / l * d + t[0] / l * w)); a = Math.min(a, h0 + 1.75 - hm); const e = eyeAt(x); b = Math.min(b, e - hm); up = Math.max(up, e - h0); } out.push([ch.name, +a.toFixed(2), +b.toFixed(2), +up.toFixed(2)]); }); return out; }, go(v) { target = s = v; }, Hgt, pos, tan, eyeAt, by(d) { target = clamp(target + d, 0, MAX_S); }, look(y, p) { yaw = y; pitch = p; }, S, jump, rewind, ARC0, ARC1, TOTAL, REG, MEM, CH, SIGNS, NOTES, ANCH, cursorCss, get state() { return { clr: +(eyeY - Hgt(pos(s)[0], pos(s)[2])).toFixed(2), s: Math.round(s), room, reg, silent: A.silent, time: +nowPlaying().toFixed(1), song: songIx, drawn: order.length, words: drawn, pace: +pace.toFixed(1), note: plNow ? plNow.name : null, scat: scN, rew: !!rew, cursor: curKey }; } };
 })();
 </script>
 </body>
