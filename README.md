@@ -15,3 +15,7 @@ python3 serve.py
 ```
 
 then open http://localhost:8791 . The page finds the file and plays it from the first heartbeat. `.gitignore` keeps any audio file out of git. Use `serve.py` rather than `python3 -m http.server`, which cannot seek inside the file, so the music would drift away from the places.
+
+## Notes and skill
+
+`docs/session-notes.md` is the history of the project, round by round. `skill/album-walk/` is a Claude skill that rebuilds this kind of page for another album; zip that folder to install it (`docs/skill-install.md`). Both are updated after every round of changes.
