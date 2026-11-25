@@ -88,6 +88,10 @@ Each round below is Adho's feedback followed by what changed.
 - **Changed:** two sound modes. Preview mode (default for visitors): each place loops its song's preview on its own audio element, crossfading 2.4 s when you cross into the next place, resuming where it was if you come back; neighbours preload. The top left shows only the song name and the Apple Music link; no bar, no time. Full mode (your own file, or `album.ogg` on localhost): unchanged, every song timed to the land, with the bar. "Use your copy" (top right) switches mid-walk. `?previews` on localhost forces preview mode, to hear what visitors hear.
 - **Trade-off:** Apple picks the 30 seconds (usually the most recognisable stretch), so in preview mode the music sets each place's mood but does not land moments on landmarks.
 
+### v14: a designed opening screen
+- **Asked for:** the opening screen still did not look its best; better font, size, palette and texture.
+- **Changed:** the title is now Fraunces Light (soft, optical size 144) in two large lines, "The long way / round the Moon", sentence case, tight tracking, in warm cream with a faint amber glow. Above it, one small amber mono line: "Pink Floyd · 1973 · on foot". The heartbeat line is shorter and traced in amber. Begin is a frosted pill with the eclipse dot; it fills cream on hover or focus. The palette on this screen comes from the eclipse corona (cream, amber, ember, warm grey) instead of cold blue-grey. Texture: a warm glow behind the eclipse, faint film scan lines, and a darker warm vignette, on top of the shared grain. The block sits higher so it clears the place rail. The old thin, wide-spaced lowercase Jost title read as a generic ambient page.
+
 ## 4. What the feedback taught (design rules that came out of this)
 
 1. **Never stop or slow the walker.** No holds, no interstitial screens. If text needs more time, lengthen the path.
@@ -103,6 +107,7 @@ Each round below is Adho's feedback followed by what changed.
 11. **Write less.** No explanatory copy on the opening screen. No keyword emphasis anywhere.
 12. **Nothing stands on the path that the camera would pass through**, except things meant to be walked through (doors, gates, cloud).
 13. **Texture makes it rich:** moving grain, dust at several sizes, warm points of light, hatching in drawings.
+14. **The opening screen is a title card, not a landing page:** one large display line in a characterful serif, one tiny mono line above it, one button. Take its palette from the scene behind it.
 
 ## 5. The current design
 

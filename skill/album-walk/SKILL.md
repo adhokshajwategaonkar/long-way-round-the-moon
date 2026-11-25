@@ -35,7 +35,7 @@ Start building after that. Ask only about choices that are expensive to redo, su
 
 For each song gather: what it is about (in your words), two to four verified facts about how it was made, and its musical landmarks (intro, voice entry, solo, peak, ending).
 
-Write as little as possible on screen. The opening screen gets the title, one visual line and the Begin button, nothing explaining the idea.
+Write as little as possible on screen. The opening screen gets the title, one visual line and the Begin button, nothing explaining the idea. Treat it as a film title card: the title large in a characterful display serif (the Moon walk uses Fraunces Light, soft, two lines, sentence case, tight tracking), at most one tiny mono line above it, a pill button, and a palette and glow taken from the scene behind. Avoid thin, wide-spaced lowercase sans titles; they read as a generic ambient page.
 
 Write the story notes like this:
 - One complete, plain sentence per note. Two to four notes per song.

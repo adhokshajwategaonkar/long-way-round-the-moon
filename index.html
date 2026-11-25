@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <!-- one face per place; each on its own line so that one bad request cannot take the others down -->
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..500,0..100&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap" rel="stylesheet">
@@ -54,38 +55,50 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 #vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse 80% 78% at 50% 46%,transparent 55%,rgba(0,0,0,.4) 100%)}
 
 /* ---------- gate: no panel. The walk's first place is the page: the eclipse over the water, the title on the water
-   below it, lettered like the titles in the land, and the ten places already laid out along the bottom. ---------- */
-#gate{position:fixed;inset:0;z-index:6;transition:opacity 1.3s ease,visibility 1.3s;pointer-events:none;
-  background:linear-gradient(to bottom,rgba(2,3,8,0) 45%,rgba(2,3,8,.42) 100%)}
+   below it, and the ten places already laid out along the bottom. Warm palette taken from the corona, a soft serif
+   for the one big line, mono for everything small, and its own film texture on top of the shared grain. ---------- */
+#gate{--cream:#F3E9D8;--amber:#F2B37A;--ember:#E07A4C;--dim:#A39886;
+  position:fixed;inset:0;z-index:6;transition:opacity 1.3s ease,visibility 1.3s;pointer-events:none;
+  background:radial-gradient(ellipse 60% 42% at 50% 30%,rgba(242,179,122,.07),transparent 70%),
+             linear-gradient(to bottom,rgba(8,5,3,0) 40%,rgba(8,5,3,.55) 100%)}
+#gate::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:soft-light;
+  background:repeating-linear-gradient(to bottom,rgba(255,240,220,.05) 0 1px,transparent 1px 3px)}
+#gate::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 75% 70% at 50% 42%,transparent 50%,rgba(4,2,1,.55) 100%)}
 #gate.gone{opacity:0;visibility:hidden}
 #gate #g-scale{opacity:0;transition:opacity 1.2s ease}
 #gate.in #g-scale{opacity:1}
 #gate button{pointer-events:auto}
-#g-mid{position:absolute;left:50%;top:51%;transform:translateX(-50%);width:min(64rem,calc(100vw - 40px));display:grid;justify-items:center;gap:16px;text-align:center}
-#g-mid::before{content:"";position:absolute;inset:-30px -10% -40px;background:radial-gradient(closest-side,rgba(2,3,8,.55),transparent);z-index:-1}
-#gate h1{font:200 clamp(30px,4.3vw,74px)/1.08 'Jost',var(--f-sans);letter-spacing:.1em;padding-left:.1em;margin:0;text-wrap:balance;color:#e8ecf6}
-#gate h1,#gate #beat,#gate #begin{animation:rise 1.6s cubic-bezier(.2,.8,.2,1) both}
-#gate #beat{animation-delay:.15s}#gate #begin{animation-delay:.35s}
-@keyframes rise{from{opacity:0;transform:translateY(14px);filter:blur(6px)}}
-#beat{width:min(520px,72vw);height:40px;overflow:visible;margin-top:-6px}
+#g-mid{position:absolute;left:50%;top:46%;transform:translateX(-50%);width:min(64rem,calc(100vw - 40px));display:grid;justify-items:center;gap:18px;text-align:center;z-index:1}
+#g-mid::before{content:"";position:absolute;inset:-40px -8% -50px;background:radial-gradient(closest-side,rgba(6,4,3,.6),transparent);z-index:-1}
+#g-k{font:500 11.5px/1 var(--f-mono);letter-spacing:.32em;text-transform:uppercase;color:var(--amber);margin:0 0 4px;text-shadow:0 0 18px rgba(242,179,122,.35);padding-left:.32em}
+#gate h1{font:300 clamp(44px,6.6vw,118px)/.9 'Fraunces',var(--f-serif);font-variation-settings:'opsz' 144,'SOFT' 100;letter-spacing:-.025em;margin:0;color:var(--cream);
+  text-shadow:0 0 38px rgba(242,179,122,.18),0 2px 30px rgba(0,0,0,.5)}
+#gate h1 span{display:block}
+#gate h1 span+span{color:#E9D3B4}
+#g-k,#gate h1,#gate #beat,#gate #begin{animation:rise 1.8s cubic-bezier(.2,.8,.2,1) both}
+#gate h1{animation-delay:.1s}#gate #beat{animation-delay:.3s}#gate #begin{animation-delay:.5s}
+@keyframes rise{from{opacity:0;transform:translateY(16px);filter:blur(8px)}}
+#beat{width:min(360px,60vw);height:34px;overflow:visible;margin-top:2px}
 #beat path{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-#beat .base{stroke:#e8ecf6;stroke-width:1;opacity:.35}
-#beat .trace{stroke:#ffd9b4;stroke-width:1.6;stroke-dasharray:14 100;stroke-dashoffset:114;animation:trace 1.087s linear infinite;filter:drop-shadow(0 0 4px rgba(255,190,140,.9))}
+#beat .base{stroke:var(--cream);stroke-width:1;opacity:.28}
+#beat .trace{stroke:var(--amber);stroke-width:1.6;stroke-dasharray:14 100;stroke-dashoffset:114;animation:trace 1.087s linear infinite;filter:drop-shadow(0 0 5px rgba(242,160,100,.9))}
 @keyframes trace{to{stroke-dashoffset:0}}
-#begin{display:flex;align-items:center;gap:14px;padding:10px 8px;margin-top:6px;color:#e8ecf6;transition:opacity .6s}
+#begin{display:flex;align-items:center;gap:14px;padding:12px 26px 12px 14px;margin-top:4px;color:var(--cream);border-radius:999px;
+  border:1px solid rgba(243,233,216,.28);background:rgba(20,13,8,.35);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  transition:opacity .6s,background .4s,border-color .4s,color .4s}
+#begin:hover,#begin:focus-visible{background:var(--cream);border-color:var(--cream);color:#1A120B}
 #begin[disabled]{opacity:.4;cursor:wait}
-#begin .ecl{width:26px;height:26px;border-radius:50%;background:#040408;transform:scale(calc(1 + var(--pu,0) * .12));
-  box-shadow:0 0 0 1px rgba(255,226,196,.75),0 0 calc(8px + var(--pu,0) * 26px) calc(1px + var(--pu,0) * 4px) rgba(255,185,130,.55)}
-#begin .lab{position:relative;padding-bottom:5px;font-size:11px;letter-spacing:.26em}
-#begin .lab::after{content:"";position:absolute;left:0;right:.16em;bottom:0;height:1px;background:currentColor;transform:scaleX(.35);transform-origin:left;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
-#begin:hover .lab::after,#begin:focus-visible .lab::after{transform:none}
-#status{font:500 10.5px/1.5 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--mut);margin:0;min-height:1.5em}
+#begin .ecl{width:22px;height:22px;border-radius:50%;background:#040408;transform:scale(calc(1 + var(--pu,0) * .12));
+  box-shadow:0 0 0 1px rgba(255,226,196,.75),0 0 calc(8px + var(--pu,0) * 22px) calc(1px + var(--pu,0) * 4px) rgba(242,160,100,.6)}
+#begin .lab{font-size:11px;letter-spacing:.26em;text-shadow:none}
+#status{font:500 10px/1.5 var(--f-mono);letter-spacing:.28em;text-transform:uppercase;color:var(--dim);margin:0;min-height:1.5em;padding-left:.28em}
 #status.bad{color:#ff9c8a}
-#g-scale{color:var(--ink)}
+#g-scale{color:var(--ink);z-index:1}
 #g-scale .seg{pointer-events:auto}
 #file{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
-@media (max-height:860px){ #g-mid{top:48%;gap:12px} #begin{margin-top:0} }
-@media (max-width:720px){ #g-mid{top:50%} #gate h1{letter-spacing:.07em} }
+@media (max-height:860px){ #g-mid{gap:14px;top:44%} }
+#g-scale .tip .nm{color:var(--cream)}
+@media (max-width:720px){ #gate h1{font-size:clamp(40px,12vw,64px)} #g-k{letter-spacing:.22em} }
 @media (prefers-reduced-motion:reduce){ #beat .trace{animation:none;stroke-dasharray:none;opacity:.6} }
 
 /* ---------- hud ---------- */
@@ -172,7 +185,8 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 
 <section id="gate" aria-labelledby="ttl">
   <div id="g-mid">
-    <h1 id="ttl">the long way round the moon</h1>
+    <p id="g-k">Pink Floyd &middot; 1973 &middot; on foot</p>
+    <h1 id="ttl"><span>The long way</span><span>round the Moon</span></h1>
     <svg id="beat" viewBox="0 0 520 40" preserveAspectRatio="none" aria-hidden="true">
       <path class="base" d="M0 26H300L312 20L322 26H334L342 34L354 2L366 36L376 26H400L416 19L432 26H520"/>
       <path class="trace" pathLength="100" d="M0 26H300L312 20L322 26H334L342 34L354 2L366 36L376 26H400L416 19L432 26H520"/>
@@ -1377,7 +1391,7 @@ if (document.fonts && document.fonts.load) FACES.forEach(f => document.fonts.loa
 
 /* ---------- start ---------- */
 async function boot() {
-  try { await Promise.race([Promise.all(["400 60px 'Instrument Serif'", "italic 400 60px 'Instrument Serif'", "400 20px 'Geist'", "500 12px 'Geist Mono'", "300 20px Jost", "400 13px Jost"].map(f => document.fonts.load(f))), new Promise(r => setTimeout(r, 3000))]); } catch (e) {}
+  try { await Promise.race([Promise.all(["400 60px 'Instrument Serif'", "italic 400 60px 'Instrument Serif'", "400 20px 'Geist'", "500 12px 'Geist Mono'", "300 20px Jost", "400 13px Jost", "300 80px Fraunces"].map(f => document.fonts.load(f))), new Promise(r => setTimeout(r, 3000))]); } catch (e) {}
   await new Promise(r => setTimeout(r, 30));
   layShelves(); buildLand(); buildTextures(); buildProps(); showTip(); soundUi(); songUi(0);
   landReady = true; gateUi();
