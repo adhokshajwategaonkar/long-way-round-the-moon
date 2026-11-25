@@ -102,6 +102,10 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 #song-fill{position:absolute;left:0;top:7px;height:2px;width:0;background:var(--hot);transition:width .3s linear}
 #song-fill::after{content:"";position:absolute;right:-4px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--hot)}
 #song-ticks i{position:absolute;top:5px;width:1px;height:6px;background:currentColor;opacity:.6}
+#song.pv #song-bar,#song.pv #song-time{display:none}
+#am{pointer-events:auto;opacity:.6;text-decoration:none;color:inherit;border-bottom:1px solid transparent;justify-self:start;transition:opacity .3s,border-color .3s}
+#am:hover{opacity:1;border-color:currentColor}
+#am[hidden]{display:none}
 #song-time{font-variant-numeric:tabular-nums;font-feature-settings:'tnum';opacity:.8}
 #vol{position:absolute;right:16px;top:14px;pointer-events:auto;display:flex;align-items:center;gap:10px;opacity:.8}
 #vol:hover{opacity:1}
@@ -184,6 +188,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   <div id="song">
     <span class="lab" id="song-l">Now playing</span>
     <div id="song-t"></div>
+    <a id="am" class="lab" href="https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699" target="_blank" rel="noopener" hidden>Listen on Apple Music &#8599;</a>
     <button id="song-bar" type="button" aria-label="Position in this song. Click to move within the song."><i id="song-fill"></i><span id="song-ticks"></span></button>
     <span class="lab" id="song-time"></span>
   </div>
@@ -973,7 +978,11 @@ const keys = {}, fwd = [0, 0, -1];
 const MEM = CH.map(() => ({ last: null, seen: -1 }));             // what each place remembers: where its song was when you left, and how far in you have been
 
 /* ---------- audio: one file, two players, crossfading between passages ---------- */
-const A = { ctx: null, els: [], gains: [], master: null, an: null, data: null, act: 0, silent: true, vol: .8, url: null, name: '', switchAt: 0, avg: .2, pt: 0 };
+const A = { ctx: null, els: [], gains: [], master: null, an: null, data: null, act: 0, silent: true, vol: .8, url: null, name: '', switchAt: 0, avg: .2, pt: 0, mode: 'preview', pv: [], pc: -1 };
+/* Apple's official 30-second previews, one per song, streamed from Apple and never copied here. Each place loops its own.
+   Apple allows them to promote the music, beside a link to it, so the song's Apple Music link is always on screen while one plays.
+   Anyone with the album can play their own copy instead: that is the full walk, with every song timed to the land. */
+const PREV = [["https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9b/f4/c4/9bf4c4bf-04fa-7aa7-72dd-061ed46db988/mzaf_2541113892140759482.plus.aac.p.m4a","https://music.apple.com/us/album/speak-to-me/1065973699?i=1065973702"],["https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/81/89/f1/8189f16a-9181-0900-9d73-29bfc3551a6c/mzaf_5153718388939194858.plus.aac.p.m4a","https://music.apple.com/us/album/breathe-in-the-air/1065973699?i=1065973704"],["https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/59/4e/82/594e8242-54db-78bc-b263-a9955a8fc6cb/mzaf_4915087858668832246.plus.aac.p.m4a","https://music.apple.com/us/album/on-the-run/1065973699?i=1065973705"],["https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a2/73/36/a27336b7-07c8-207a-74fd-9926910f9903/mzaf_10065953245083721782.plus.aac.p.m4a","https://music.apple.com/us/album/time/1065973699?i=1065973706"],["https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d2/f9/48/d2f94857-4c9e-8b5c-f217-1d1545190a23/mzaf_6255469880857885400.plus.aac.p.m4a","https://music.apple.com/us/album/the-great-gig-in-the-sky/1065973699?i=1065973707"],["https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6d/43/69/6d43694d-0ab0-cac6-6778-d3831d043d37/mzaf_8557628658392699332.plus.aac.p.m4a","https://music.apple.com/us/album/money/1065973699?i=1065973708"],["https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/15/44/34/15443442-d2d6-bf9a-d98d-f4872d04a16d/mzaf_10707973549145377888.plus.aac.p.m4a","https://music.apple.com/us/album/us-and-them/1065973699?i=1065973709"],["https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/55/77/f8/5577f8e3-8aa3-558e-47a2-00a28dcdc218/mzaf_15382453207393240964.plus.aac.p.m4a","https://music.apple.com/us/album/any-colour-you-like/1065973699?i=1065973710"],["https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fa/1b/10/fa1b10d4-45f9-542a-85c1-b32727f2a6b4/mzaf_15184777506201061632.plus.aac.p.m4a","https://music.apple.com/us/album/brain-damage/1065973699?i=1065973711"],["https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cb/e6/87/cbe6871b-2736-6139-f60e-97097212d5bd/mzaf_11795631498374214497.plus.aac.p.m4a","https://music.apple.com/us/album/eclipse/1065973699?i=1065973712"]];
 try { const v = parseFloat(localStorage.getItem('lw-vol')); if (v >= 0 && v <= 1) A.vol = v; } catch (e) {}
 const live = () => !A.silent && !!A.ctx;
 function audioInit() {
@@ -981,15 +990,34 @@ function audioInit() {
   const Ctx = window.AudioContext || window.webkitAudioContext; A.ctx = new Ctx();
   A.master = A.ctx.createGain(); A.master.gain.value = A.vol; A.an = A.ctx.createAnalyser(); A.an.fftSize = 2048; A.an.smoothingTimeConstant = .5;
   const pre = A.ctx.createGain(); A.pre = pre; pre.connect(A.an); pre.connect(A.master); A.master.connect(A.ctx.destination); A.data = new Uint8Array(A.an.frequencyBinCount);
+  if (A.mode === 'full') mkFull();
+}
+function mkFull() {
+  if (A.els.length) return;
   for (let i = 0; i < 2; i++) {
     const el = new Audio(); el.preload = 'auto'; el.src = A.url;
     el.addEventListener('error', () => { if (!A.silent) { A.silent = true; toast('This browser could not play that file, so the walk is silent. An MP3 or M4A copy usually works everywhere.'); soundUi(); } });
-    const gn = A.ctx.createGain(); gn.gain.value = 0; A.ctx.createMediaElementSource(el).connect(gn); gn.connect(pre);
+    const gn = A.ctx.createGain(); gn.gain.value = 0; A.ctx.createMediaElementSource(el).connect(gn); gn.connect(A.pre);
     A.els.push(el); A.gains.push(gn);
   }
 }
+/* previews: one looping element per place, made when first needed, kept so a place resumes where it was */
+function pvNode(c) {
+  if (A.pv[c]) return A.pv[c];
+  const el = new Audio(); el.crossOrigin = 'anonymous'; el.loop = true; el.preload = 'auto'; el.src = PREV[c][0];
+  const gn = A.ctx.createGain(); gn.gain.value = 0; A.ctx.createMediaElementSource(el).connect(gn); gn.connect(A.pre);
+  return (A.pv[c] = { el, gn });
+}
+function previewTo(c, fade = 2.4) {
+  if (A.mode !== 'preview' || !live() || c < 0 || c === A.pc) return;
+  const now = A.ctx.currentTime, ramp = (gn, v) => { gn.gain.cancelScheduledValues(now); gn.gain.setValueAtTime(gn.gain.value, now); gn.gain.linearRampToValueAtTime(v, now + fade); };
+  const n = pvNode(c), old = A.pv[A.pc]; const p = n.el.play(); if (p && p.catch) p.catch(() => {}); ramp(n.gn, 1);
+  if (old) { ramp(old.gn, 0); const oc = A.pc; setTimeout(() => { if (A.pc !== oc) old.el.pause(); }, fade * 1000 + 250); }
+  A.pc = c; [c - 1, c + 1].forEach(k => { if (k >= 0 && k < PREV.length) pvNode(k); });      // the neighbours load early, so crossing over has no gap
+}
+function previewOff() { if (!A.ctx) return; const now = A.ctx.currentTime; A.pv.forEach(n => { if (!n) return; n.gn.gain.cancelScheduledValues(now); n.gn.gain.setValueAtTime(n.gn.gain.value, now); n.gn.gain.linearRampToValueAtTime(0, now + 1.2); setTimeout(() => n.el.pause(), 1500); }); A.pc = -1; }
 function playAt(time, fade = 2.4) {
-  if (!live()) return;
+  if (!live() || A.mode !== 'full') return;
   const nx = 1 - A.act, el = A.els[nx], old = A.act, now = A.ctx.currentTime;
   const seek = () => { try { el.currentTime = Math.max(0, time); } catch (e) {} };
   if (el.readyState < 1) el.addEventListener('loadedmetadata', seek, { once: true }); else seek();
@@ -1000,10 +1028,11 @@ function playAt(time, fade = 2.4) {
   A.act = nx; A.switchAt = performance.now();
 }
 function hush(fade = 1.4) { if (!live()) return; const now = A.ctx.currentTime; A.gains.forEach(gn => { gn.gain.cancelScheduledValues(now); gn.gain.setValueAtTime(gn.gain.value, now); gn.gain.linearRampToValueAtTime(0, now + fade); }); }
-const nowPlaying = () => A.els[A.act] ? A.els[A.act].currentTime : -1;
+const nowPlaying = () => A.mode === 'full' && A.els[A.act] ? A.els[A.act].currentTime : -1;
 /* arriving somewhere. A place you have been before picks its song up where you left it. A lead-in sets the song to the
    run-up of its moment, judged by how fast you are walking; an arrival pulls the song to the moment itself, unless it is already there. */
 function arrive(from, to, force) {
+  if (A.mode === 'preview') { const b = REG[to]; previewTo(b ? b.c : 0); return; }
   const a = REG[from], b = REG[to], now = nowPlaying(), ca = a && CH[a.c];
   if (a && a.c !== b.c && live() && now >= ca.a0 - 3 && now <= ca.a1 + 3) MEM[a.c].last = now;
   const m = MEM[b.c], newPlace = !a || a.c !== b.c;
@@ -1015,7 +1044,7 @@ function arrive(from, to, force) {
 function audioTick(dt, t) {
   if (!live() || rew) { const b = (t * .92) % 1, beat = Math.exp(-b * 9) + .7 * Math.exp(-Math.abs(b - .28) * 14); pulse = lerp(pulse, beat * .6, 1 - Math.exp(-dt * 14)); level = lerp(level, .3 + .2 * Math.sin(t * .4), dt); return; }
   const el = A.els[A.act], ch = CH[Math.max(room, 0)];
-  if (performance.now() - A.switchAt > 5000 && (el.ended || el.currentTime > ch.a1 - 2.8) && s < MAX_S - 6) playAt(REG[firstReg(Math.max(room, 0))].t);   // stayed past the end: this place begins again
+  if (A.mode === 'full' && el && performance.now() - A.switchAt > 5000 && (el.ended || el.currentTime > ch.a1 - 2.8) && s < MAX_S - 6) playAt(REG[firstReg(Math.max(room, 0))].t);   // stayed past the end: this place begins again
   A.an.getByteFrequencyData(A.data);
   let lo = 0; for (let i = 1; i < 8; i++) lo += A.data[i]; lo /= 7 * 255;
   let all = 0; for (let i = 2; i < 160; i++) all += A.data[i]; all /= 158 * 255;
@@ -1038,7 +1067,8 @@ let ready = false;
    it plays. A visitor can still add their own later from "Add sound", or by dropping a file anywhere. */
 const LOCAL = ['album.ogg', 'album.mp3', 'album.m4a'];
 async function findLocal() {
-  if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) return null;      // only ever looked for on your own machine
+  if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) return null;
+  if (/[?&]previews\b/.test(location.search)) return null;      // ?previews hears what visitors hear
   for (const u of LOCAL) { try { const r = await fetch(u, { method: 'HEAD', cache: 'no-store' }); if (r.ok && /audio|ogg|octet/.test(r.headers.get('content-type') || 'audio')) return u; } catch (e) {} }
   return null;
 }
@@ -1048,27 +1078,30 @@ function useUrl(url, name, quiet) {
   pr.addEventListener('loadedmetadata', () => {
     const d = pr.duration, odd = isFinite(d) && d > 0 && (d < 2400 || d > 2700); ready = true; gateUi();
     if (odd && !quiet) toast('This file is not about 42 minutes long, so songs may not line up with their places.');
-    if (entered && A.silent) startSound();
+    if (entered && (A.silent || A.mode === 'preview')) startSound();
   }, { once: true });
   pr.addEventListener('error', () => { if (url.startsWith('blob:')) URL.revokeObjectURL(url); A.url = null; ready = false; gateUi(); if (!quiet) toast('This browser cannot play ' + name + '. An MP3 or M4A copy usually works.'); }, { once: true });
   pr.src = url;
 }
 function setFile(file, remembered) {
   if (!file) return;
-  if (A.ctx) { toast('Reload the page to switch to a different file.'); return; }
+  if (A.ctx && A.mode === 'full') { toast('Reload the page to switch to a different file.'); return; }
   if (A.url && A.url.startsWith('blob:')) URL.revokeObjectURL(A.url);
   useUrl(URL.createObjectURL(file), file.name || 'your file', remembered);
   if (!remembered) { idbSet('album', { blob: file, name: file.name }); if (entered) toast('Playing ' + (file.name || 'your file') + '. It stays in this browser.'); }
 }
 function startSound() {
-  try { audioInit(); A.silent = false; arrive(-1, Math.max(reg, 0), true); A.ctx.resume().catch(() => {}); }
+  try {
+    const own = !!(A.url && ready); if (own && A.mode === 'preview') { previewOff(); A.mode = 'full'; } else if (!own) A.mode = 'preview';
+    audioInit(); if (A.mode === 'full') mkFull(); A.silent = false; arrive(-1, Math.max(reg, 0), true); A.ctx.resume().catch(() => {});
+  }
   catch (e) { A.silent = true; toast('Sound could not start in this browser, so the walk is silent.'); }
   soundUi();
 }
 function gateUi() {
   beginEl.disabled = !landReady;
   if (!landReady) return;
-  status(A.url && ready ? 'Headphones on.' : '');
+  status('Headphones on.');
 }
 
 /* ---------- gate, volume ---------- */
@@ -1081,13 +1114,14 @@ function enter(at) {
   gate.classList.add('gone'); hud.classList.add('on');
   entered = true;
   if (at != null) jump(at); else target = Math.max(target, 22);      // the first step is taken for you, so the page turns straight into the walk
-  if (A.url && ready) startSound(); else soundUi();
+  startSound();
   cv.focus({ preventScroll: true });
 }
 $('#sound').addEventListener('click', e => { e.preventDefault(); fileIn.click(); });
 const volEl = $('#volume'); volEl.value = Math.round(A.vol * 100);
 volEl.addEventListener('input', () => { A.vol = volEl.value / 100; if (A.master) A.master.gain.setTargetAtTime(A.vol, A.ctx.currentTime, .05); try { localStorage.setItem('lw-vol', String(A.vol)); } catch (e) {} });
-function soundUi() { $('#sound').hidden = !A.silent; $('#vol-l').hidden = A.silent; volEl.hidden = A.silent; }
+function soundUi() { const pv = !A.silent && A.mode === 'preview'; $('#sound').hidden = !A.silent && !pv; $('#sound').textContent = pv ? 'Use your copy' : 'Add sound'; $('#vol-l').hidden = A.silent || pv; volEl.hidden = A.silent;
+  $('#sound').title = pv ? 'Have the album? Play your own file for the full walk, every song timed to its place.' : ''; songIx = -2; }
 const noteEl = $('#plaque'), notesBtn = $('#notes-b'), plT = $('#pl-t'); let plNow = null, plA = 0, plSp = [];
 function plFill(g) { noteEl.className = g.side; $('#pl-k').textContent = `${CH[g.c].no} \u00b7 ${g.name}`; $('#pl-c').textContent = `${CH[g.c].name} \u00b7 ${CH[g.c].place}`;
   plT.textContent = ''; plSp = g.notes.map(n => { const e = document.createElement('span'); e.textContent = n + ' '; e.style.opacity = 0; plT.appendChild(e); return e; }); }
@@ -1118,15 +1152,16 @@ $('#again').addEventListener('click', rewind);
 /* ---------- the song: title, where you are in it, and a way to move within it ---------- */
 const songEl = $('#song'), fillEl = $('#song-fill'), ticksEl = $('#song-ticks'), timeEl = $('#song-time');
 function songUi(t) {
-  const on = live() && !rew, at = on ? nowPlaying() : -1; let ix = Math.max(room, 0);
-  if (on) { ix = 0; while (ix < 9 && at >= TRACKS[ix + 1]) ix++; }
+  const pv = A.mode === 'preview', on = live() && !rew, at = on && !pv ? nowPlaying() : -1; let ix = Math.max(room, 0);
+  if (pv) { if (on && A.pc >= 0) ix = A.pc; }
+  else if (on) { ix = 0; while (ix < 9 && at >= TRACKS[ix + 1]) ix++; }
   const t0 = TRACKS[ix], t1 = TRACKS[ix + 1];
   if (ix !== songIx || on !== songLive) {
-    songIx = ix; songLive = on; $('#song-t').textContent = CH[ix].name; $('#song-l').textContent = on ? 'Now playing' : rew ? 'Rewinding' : 'Silent walk';
+    songIx = ix; songLive = on; $('#song-t').textContent = CH[ix].name; songEl.classList.toggle('pv', pv); $('#am').hidden = !(pv && on); $('#am').href = PREV[ix][1]; $('#song-l').textContent = on ? 'Now playing' : rew ? 'Rewinding' : 'Silent walk';
     ticksEl.innerHTML = REG.filter(r => !r.soft && r.t > t0 + 2 && r.t < t1).map(r => `<i style="left:${((r.t - t0) / (t1 - t0) * 100).toFixed(2)}%" title="${r.name}"></i>`).join('');
     songEl.classList.remove('swap'); void songEl.offsetWidth; songEl.classList.add('swap'); songTick = 0;
   }
-  if (t - songTick > .25) { songTick = t; fillEl.style.width = (on ? clamp((at - t0) / (t1 - t0), 0, 1) * 100 : 0) + '%'; timeEl.textContent = (on ? mmss(Math.max(0, at - t0)) : '–:––') + ' / ' + mmss(t1 - t0); }
+  if (!pv && t - songTick > .25) { songTick = t; fillEl.style.width = (on ? clamp((at - t0) / (t1 - t0), 0, 1) * 100 : 0) + '%'; timeEl.textContent = (on ? mmss(Math.max(0, at - t0)) : '–:––') + ' / ' + mmss(t1 - t0); }
 }
 $('#song-bar').addEventListener('click', e => { if (!live() || songIx < 0) return; const r = e.currentTarget.getBoundingClientRect(), q = clamp((e.clientX - r.left) / r.width, 0, 1); playAt(TRACKS[songIx] + q * (TRACKS[songIx + 1] - TRACKS[songIx]), .5); songTick = 0; });
 
@@ -1350,13 +1385,13 @@ async function boot() {
   requestAnimationFrame(() => { gate.classList.add('in'); cv.classList.add('on'); beginEl.focus({ preventScroll: true }); });
   const local = await findLocal();
   if (local) { useUrl(local, 'the album', true); return; }
-  const saved = await idbGet('album');
+  const saved = /[?&]previews\b/.test(location.search) ? null : await idbGet('album');
   if (saved && saved.blob && !A.url) { try { setFile(new File([saved.blob], saved.name || 'your album', { type: saved.blob.type }), true); } catch (e) {} }
 }
 boot();
 
 /* small handle for checking the build */
-window.__lw = { clear() { const out = []; CH.forEach((ch, c) => { let a = 1e9, b = 1e9, up = 0; for (let x = ch.s0; x < ch.s1; x += 1.5) { const p = pos(x), t = tan(x), l = Math.hypot(t[0], t[2]) || 1, h0 = Hgt(p[0], p[2]); let hm = h0; for (let d = 1; d <= 10; d++) for (const w of [-4, -2, 0, 2, 4]) hm = Math.max(hm, Hgt(p[0] + t[0] / l * d - t[2] / l * w, p[2] + t[2] / l * d + t[0] / l * w)); a = Math.min(a, h0 + 1.75 - hm); const e = eyeAt(x); b = Math.min(b, e - hm); up = Math.max(up, e - h0); } out.push([ch.name, +a.toFixed(2), +b.toFixed(2), +up.toFixed(2)]); }); return out; }, go(v) { target = s = v; }, Hgt, pos, tan, eyeAt, by(d) { target = clamp(target + d, 0, MAX_S); }, look(y, p) { yaw = y; pitch = p; }, S, jump, rewind, ARC0, ARC1, TOTAL, REG, MEM, CH, SIGNS, NOTES, ANCH, cursorCss, get state() { return { clr: +(eyeY - Hgt(pos(s)[0], pos(s)[2])).toFixed(2), s: Math.round(s), room, reg, silent: A.silent, time: +nowPlaying().toFixed(1), song: songIx, drawn: order.length, words: drawn, pace: +pace.toFixed(1), note: plNow ? plNow.name : null, scat: scN, rew: !!rew, cursor: curKey }; } };
+window.__lw = { clear() { const out = []; CH.forEach((ch, c) => { let a = 1e9, b = 1e9, up = 0; for (let x = ch.s0; x < ch.s1; x += 1.5) { const p = pos(x), t = tan(x), l = Math.hypot(t[0], t[2]) || 1, h0 = Hgt(p[0], p[2]); let hm = h0; for (let d = 1; d <= 10; d++) for (const w of [-4, -2, 0, 2, 4]) hm = Math.max(hm, Hgt(p[0] + t[0] / l * d - t[2] / l * w, p[2] + t[2] / l * d + t[0] / l * w)); a = Math.min(a, h0 + 1.75 - hm); const e = eyeAt(x); b = Math.min(b, e - hm); up = Math.max(up, e - h0); } out.push([ch.name, +a.toFixed(2), +b.toFixed(2), +up.toFixed(2)]); }); return out; }, go(v) { target = s = v; }, Hgt, pos, tan, eyeAt, by(d) { target = clamp(target + d, 0, MAX_S); }, look(y, p) { yaw = y; pitch = p; }, S, jump, rewind, ARC0, ARC1, TOTAL, REG, MEM, CH, SIGNS, NOTES, ANCH, cursorCss, get audio() { return { mode: A.mode, pc: A.pc, t: A.pv.map(n => n ? +n.el.currentTime.toFixed(1) : null), playing: A.pv.map(n => n ? !n.el.paused : null), level: +level.toFixed(3), bins: A.data ? Array.from(A.data.slice(1, 40)).reduce((a, b) => a + b, 0) : -1 }; }, get state() { return { clr: +(eyeY - Hgt(pos(s)[0], pos(s)[2])).toFixed(2), s: Math.round(s), room, reg, silent: A.silent, time: +nowPlaying().toFixed(1), song: songIx, drawn: order.length, words: drawn, pace: +pace.toFixed(1), note: plNow ? plNow.name : null, scat: scN, rew: !!rew, cursor: curKey }; } };
 })();
 </script>
 </body>

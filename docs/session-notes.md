@@ -17,7 +17,7 @@ The album plays from your own file, and the music is cued so that each song's ke
 
 ## 2. Fixed rules (these held through every version)
 
-- **The album is never published.** It is not in the repo (`.gitignore` blocks audio files). On the public site the walk is silent unless a visitor adds their own copy ("Add sound" or drop a file). On Adho's Mac, `album.ogg` sits next to `index.html` and plays automatically when served by `serve.py` on localhost. Adho asked several times to publish the file; it was declined each time (it is the full commercial album, and the archive.org copy has no licence). The YouTube embed route was examined and rejected (gaps between songs, ads, mobile autoplay limits, no audio analysis). A Spotify sign-in mode and a recorded walkthrough video were offered as alternatives.
+- **The album is never published.** It is not in the repo (`.gitignore` blocks audio files). On the public site every visitor hears Apple's official 30-second preview of each song, looping in its place (v13); anyone with the album can play their own copy instead ("Use your copy" or drop a file) for the full timed walk. On Adho's Mac, `album.ogg` sits next to `index.html` and plays automatically when served by `serve.py` on localhost. Adho asked several times to publish the file; it was declined each time (it is the full commercial album, and the archive.org copy has no licence). The YouTube embed route was examined and rejected (gaps between songs, ads, mobile autoplay limits, no audio analysis). Cutting the album into short loops ourselves was also declined (still the recording, still unlicensed). Spotify no longer gives new apps preview files; its embed and YouTube both need a visible player. Apple's previews were chosen (v13).
 - **No lyrics on screen.** Each world is built from what its song is about, but no lyric text is shown.
 - **No album cover artwork.** The prism image is not reproduced anywhere.
 - **Do not copy the reference's text or layout.** Use it for the idea only.
@@ -82,6 +82,12 @@ Each round below is Adho's feedback followed by what changed.
 - **Changed:** story notes became plaques: one per group of notes, on the side the group belongs to, label `I · The voices`, sentences that sharpen from a blur one by one as you reach them, credit `Speak to Me · The far side`. Labels in IBM Plex Mono, reading text in Archivo (the HUD too). Every in-world title now writes itself in from left to right once it comes out of the distance. Film grain now moves. Dust doubled, with some large soft out-of-focus motes. Warm bulbs on threads over the first water and along the causeway. Pencil hatching inside the house, doors, shed, towers, signs and arch.
 - **What went wrong before:** v1 to v9 never saw the reference running, never saw real fonts, and treated "story" as a caption problem. The reference's answer is typographic: a tight three-part plaque with a mono label, set low and to the side, revealed by scroll.
 
+### v13: sound for everyone, from Apple's previews
+- **Asked for:** can we cut the parts of each song that fit the scenery and loop them, so nobody gets the album, and drop the progress bar? Then: build it with Apple previews, keep the own-file path.
+- **Decided:** cutting and hosting clips ourselves is still publishing the recording, so no. Apple's iTunes Search API gives an official 30-second preview of every track, streamed from Apple's servers, with open CORS (so Web Audio and the pulse still work). Apple's terms allow previews only to promote store content, beside a store badge or link, and exclude entertainment use; a fan walk is a grey area, so a "Listen on Apple Music" link to the current song is always on screen while a preview plays.
+- **Changed:** two sound modes. Preview mode (default for visitors): each place loops its song's preview on its own audio element, crossfading 2.4 s when you cross into the next place, resuming where it was if you come back; neighbours preload. The top left shows only the song name and the Apple Music link; no bar, no time. Full mode (your own file, or `album.ogg` on localhost): unchanged, every song timed to the land, with the bar. "Use your copy" (top right) switches mid-walk. `?previews` on localhost forces preview mode, to hear what visitors hear.
+- **Trade-off:** Apple picks the 30 seconds (usually the most recognisable stretch), so in preview mode the music sets each place's mood but does not land moments on landmarks.
+
 ## 4. What the feedback taught (design rules that came out of this)
 
 1. **Never stop or slow the walker.** No holds, no interstitial screens. If text needs more time, lengthen the path.
@@ -117,8 +123,8 @@ Each round below is Adho's feedback followed by what changed.
 
 ### On-screen controls
 - **Opening screen:** the eclipse over the water, the title, a heartbeat line, Begin, and the ten places along the bottom (click one to start there).
-- **Top left:** the song now playing (Archivo), with a bar you can drag to seek, and a mono label and time.
-- **Top right:** volume (or "Add sound" when there is no album), and "Notes on/off".
+- **Top left:** the song now playing (Archivo). With previews: a "Listen on Apple Music" link under it. With your own file: a bar you can drag to seek, and the time.
+- **Top right:** "Use your copy" while previews play, volume, and "Notes on/off".
 - **Low on the left or right:** the story plaque.
 - **Bottom:** the journey scale. Click a place to go there; hover for its name.
 - **End of the route:** "Walk me back" rewinds the whole route in under four seconds.
@@ -149,7 +155,8 @@ One self-contained HTML page, about 126 KB. No libraries.
 - **Titles:** drawn to canvas with a two-channel mask (so one texture can carry two colours), stood beside the path facing where you read them from, built only when near and released when far.
 - **Light:** a palette per place (sky, ground, fog, accent, HUD colour), blended along the route so each place has its own light by the time its title is readable.
 - **Camera:** follows the route, leans part-way toward landmarks and titles, and keeps a clearance above nearby ground.
-- **Audio:** two audio elements crossfaded through Web Audio gains; an analyser gives a bass pulse and a level. On localhost the page looks for `album.ogg`, `album.mp3` or `album.m4a` next to it; otherwise a visitor's own file is stored in IndexedDB.
+- **Audio, preview mode:** one looping audio element per place (crossOrigin anonymous) from Apple's preview URLs (iTunes lookup of album 1065973699), each with its own gain into the shared analyser.
+- **Audio, full mode:** two audio elements crossfaded through Web Audio gains; an analyser gives a bass pulse and a level. On localhost the page looks for `album.ogg`, `album.mp3` or `album.m4a` next to it; otherwise a visitor's own file is stored in IndexedDB.
 - **Type:** IBM Plex Mono for labels, Archivo for reading text, Jost for the opening title. In-world titles keep their own per-place designs.
 - **Serving:** `serve.py` (Python, adds range requests) on port 8791 locally; GitHub Pages publicly.
 - **Cues:** a sorted list of landmarks, each with a position and a time in the file. Crossing one calls a single `arrive` function that decides whether to resume, jump, or leave the song alone.
@@ -181,6 +188,8 @@ That workspace is temporary. The published artifact is the durable copy: its HTM
 ## 8. Open items
 
 - Each place makes four or five music jumps, because the walk is far shorter than the songs. Not yet judged by ear.
-- Sound for public visitors: undecided between a Spotify sign-in mode and a recorded walkthrough video.
+- Preview loops restart with Apple's own fade-out and fade-in, a short dip every 30 s. Not judged by ear yet.
+- Previews on phones (iOS may block a new audio element started outside a tap) not tested.
+- Switching to your own copy mid-walk was checked by reading the code, not by picking a file in the browser.
 - In The Great Gig in the Sky, light text has the weakest contrast against the pink hills.
 - Phone portrait layout received only a quick check.
